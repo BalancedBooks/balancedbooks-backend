@@ -1,21 +1,32 @@
+using CommunityToolkit.Diagnostics;
 using Microsoft.OpenApi.Models;
 
-namespace balancedbooks_backend.Core.OpenAPI;
+namespace BalancedBooks_API.Core.OpenAPI;
 
 public static class SwaggerConfig
 {
-    public static IServiceCollection AddSwaggerDeps(this IServiceCollection services, HttpConfig httpConfig)
+    public static IServiceCollection AddOpenApiDocumentation(this IServiceCollection services,
+        IConfigurationManager configurationManager)
     {
         services.AddEndpointsApiExplorer();
+
+        services.AddHttpConfig();
+
+        var httpConfig = configurationManager.GetRequiredSection(HttpConfig.ConfigKey).Get<HttpConfig>();
+
+        Guard.IsNotNull(httpConfig);
 
         services.AddSwaggerGen(opts =>
         {
             opts.SchemaFilter<SetNonNullableAsRequiredSchemaFilter>();
+
             opts.SupportNonNullableReferenceTypes();
-            opts.AddServer(new OpenApiServer()
+
+            opts.AddServer(new OpenApiServer
             {
                 Url = httpConfig.Url
             });
+
             opts.SwaggerDoc("v1", new OpenApiInfo
             {
                 Title = "Balanced Books - API",
@@ -24,11 +35,10 @@ public static class SwaggerConfig
             });
         });
 
-
         return services;
     }
 
-    public static IApplicationBuilder UseSwaggerDeps(this IApplicationBuilder app)
+    public static IApplicationBuilder UseSwaggerDependencies(this IApplicationBuilder app)
     {
         app.UseSwagger();
         app.UseSwaggerUI(opts => { opts.SwaggerEndpoint("v1/swagger.json", "Backend schema"); });

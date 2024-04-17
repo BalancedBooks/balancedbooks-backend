@@ -1,9 +1,9 @@
 using System.Net;
-using balancedbooks_backend.Core.Exceptions.Models;
+using BalancedBooks_API.Core.Exceptions.Models;
 using FluentValidation;
 using Newtonsoft.Json;
 
-namespace balancedbooks_backend.Core.Exceptions;
+namespace BalancedBooks_API.Core.Exceptions;
 
 /// <summary>
 /// Handles the normalization and serialization of the exceptions.

@@ -1,18 +1,15 @@
-namespace balancedbooks_backend.Core;
+namespace BalancedBooks_API.Core;
 
-public record HttpConfig(
-    string Url
-);
+public class HttpConfig
+{
+    public const string ConfigKey = "HTTP";
+    public required string Url { get; init; }
+}
 
 public static class HttpConfigExtensions
 {
-    public static HttpConfig AddHttpConfig(this IServiceCollection services,
-        IConfigurationManager configuration)
+    public static void AddHttpConfig(this IServiceCollection services)
     {
-        const string httpConfigKey = "HTTP";
-
-        services.Configure<HttpConfig>(configuration.GetSection(httpConfigKey));
-
-        return configuration.GetSection(httpConfigKey).Get<HttpConfig>() ?? throw new Exception("Invalid HTTP Config");
+        services.AddOptionsWithValidateOnStart<HttpConfig>().BindConfiguration(HttpConfig.ConfigKey);
     }
 }

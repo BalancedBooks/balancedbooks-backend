@@ -1,4 +1,5 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Monitoring/StartMode/@EntryValue">OnDebug</s:String>
 	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;
   &lt;Assembly Path="/Users/mocsaibalazs/.nuget/packages/sprache/2.3.1/lib/netstandard2.1/Sprache.dll" /&gt;
 &lt;/AssemblyExplorer&gt;</s:String>
@@ -6,5 +7,4 @@
   &lt;TestAncestor&gt;
     &lt;TestId&gt;NUnit3x::092DB686-44FD-428F-9FD9-A9979F161E6F::net8.0::balancedbooks_backend.ExternalIntegrations.CompanyRegistry.Tests.CompanyRegistryHttpClientTests.Should&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
-&lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Monitoring/StartMode/@EntryValue">OnDebug</s:String></wpf:ResourceDictionary>
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

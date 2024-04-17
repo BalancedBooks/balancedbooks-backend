@@ -1,7 +1,7 @@
 using FluentValidation;
 using MediatR;
 
-namespace balancedbooks_backend.Authentication.SignUp;
+namespace BalancedBooks_API.Authentication.SignUp;
 
 public record SignUpCommand(string FirstName, string LastName, bool AgreedTerms, string Password)
     : IRequest<SignUpCommandResponse>;

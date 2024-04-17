@@ -2,7 +2,7 @@
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
-namespace balancedbooks_backend.Core.Exceptions.Models;
+namespace BalancedBooks_API.Core.Exceptions.Models;
 
 public interface IHttpBaseException
 {

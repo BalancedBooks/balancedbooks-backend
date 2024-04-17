@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <RootNamespace>balancedBooks-API</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Bogus" Version="35.5.0" />
+        <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.2.2" />
+        <PackageReference Include="DotNetEnv" Version="3.0.0" />
+        <PackageReference Include="FluentAssertions" Version="7.0.0-alpha.3" />
+        <PackageReference Include="FluentResults" Version="3.15.2" />
+        <PackageReference Include="FluentValidation" Version="11.9.0" />
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.0" />
+        <PackageReference Include="Flurl" Version="4.0.0" />
+        <PackageReference Include="MediatR" Version="12.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.4" />
+        <PackageReference Include="Microsoft.Extensions.Diagnostics.Testing" Version="9.0.0-preview.3.24209.3" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0-release-24177-07" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="NUnit" Version="4.1.0" />
+        <PackageReference Include="NUnit.Analyzers" Version="4.1.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="NUnit.ConsoleRunner" Version="3.17.0" />
+        <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
+    </ItemGroup>
+
+</Project>

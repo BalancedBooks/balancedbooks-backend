@@ -1,4 +1,4 @@
-namespace balancedbooks_backend.Core;
+namespace BalancedBooks_API.Core;
 
 public class DbConfig
 {

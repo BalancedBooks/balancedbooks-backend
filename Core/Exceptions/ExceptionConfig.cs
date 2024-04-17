@@ -1,4 +1,4 @@
-namespace balancedbooks_backend.Core.Exceptions;
+namespace BalancedBooks_API.Core.Exceptions;
 
 public static class ExceptionConfig
 {
@@ -6,9 +6,9 @@ public static class ExceptionConfig
     /// Registers ExceptionSerializer middleware
     /// </summary>
     /// <returns></returns>
-    public static void AddExceptionMiddlewareModule(this IServiceCollection services)
+    public static IServiceCollection AddExceptionMiddlewareSerializer(this IServiceCollection services)
     {
-        services.AddTransient<ExceptionSerializerMiddleware>();
+        return services.AddTransient<ExceptionSerializerMiddleware>();
     }
 
     /// <summary>

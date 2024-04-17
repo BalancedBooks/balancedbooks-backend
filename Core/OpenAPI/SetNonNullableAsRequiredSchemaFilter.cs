@@ -1,7 +1,7 @@
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace balancedbooks_backend.Core.OpenAPI;
+namespace BalancedBooks_API.Core.OpenAPI;
 
 public class SetNonNullableAsRequiredSchemaFilter : ISchemaFilter
 {

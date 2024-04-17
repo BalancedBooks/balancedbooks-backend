@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace balancedbooks_backend.Authentication.SignUp;
+namespace BalancedBooks_API.Authentication.SignUp;
 
 public class SignUpHandler : IRequestHandler<SignUpCommand, SignUpCommandResponse>
 {

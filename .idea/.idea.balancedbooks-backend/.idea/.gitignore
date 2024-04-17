@@ -2,10 +2,10 @@
 /shelf/
 /workspace.xml
 # Rider ignored files
-/.idea.balancedbooks-app-backend.iml
-/modules.xml
-/contentModel.xml
 /projectSettingsUpdater.xml
+/modules.xml
+/.idea.BalancedBooks-Backend.iml
+/contentModel.xml
 # Editor-based HTTP Client requests
 /httpRequests/
 # Datasource local storage ignored files

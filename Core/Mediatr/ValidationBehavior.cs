@@ -1,7 +1,7 @@
 using FluentValidation;
 using MediatR;
 
-namespace balancedbooks_backend.Core.Mediatr;
+namespace BalancedBooks_API.Core.Mediatr;
 
 /// <summary>
 /// Runs defined validators for given mediatr handlers automatically.

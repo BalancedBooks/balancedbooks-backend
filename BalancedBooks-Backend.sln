@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "balancedbooks-backend", "balancedbooks-backend.csproj", "{092DB686-44FD-428F-9FD9-A9979F161E6F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BalancedBooks-API", "BalancedBooks-API.csproj", "{092DB686-44FD-428F-9FD9-A9979F161E6F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

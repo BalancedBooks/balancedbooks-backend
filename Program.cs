@@ -1,35 +1,42 @@
-using balancedbooks_backend.Authentication;
-using balancedbooks_backend.Core;
-using balancedbooks_backend.Core.Exceptions;
-using balancedbooks_backend.Core.Mediatr;
-using balancedbooks_backend.Core.OpenAPI;
+using BalancedBooks_API.Authentication;
+using BalancedBooks_API.Core;
+using BalancedBooks_API.Core.Environment;
+using BalancedBooks_API.Core.Exceptions;
+using BalancedBooks_API.Core.Mediatr;
+using BalancedBooks_API.Core.OpenAPI;
+using BalancedBooks_API.ExternalIntegrations.CompanyRegistry;
+using BalancedBooks_API.OpenApi;
+using BalancedBooks_API.PublicCompanyCertificate;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var services = builder.Services;
 var configuration = builder.Configuration;
 
-configuration.AddEnvironmentFlowDeps();
+/* DEPENDENCIES */
 
-var httpConfig = services.AddHttpConfig(configuration);
-services.AddAuthenticationDeps(configuration);
+services
+    .AddCors()
+    // customs
+    .AddEnvironmentFlow(configuration)
+    .AddJwtAuthentication(configuration)
+    .AddOpenApiDocumentation(configuration)
+    .AddMediatrHandlers()
+    .AddExceptionMiddlewareSerializer()
+    .AddCompanyRegistryIntegration(configuration);
 
-services.AddSwaggerDeps(httpConfig);
-
-services.AddMediatrDeps();
-
-services.AddCors();
-
-services.AddExceptionMiddlewareModule();
-
-/* INIT */
-
+// init
 var app = builder.Build();
 
-app.MapGroup("/auth").MapAuthenticationRoutes();
+/* MODULES */
 
-app.UseSwaggerDeps();
+app.MapAuthenticationModuleRoutes();
+app.MapPublicCompanyCertificateModuleRoutes();
+app.MapOpenApiModuleRoutes();
 
+/* MIDDLEWARES */
+
+app.UseSwaggerDependencies();
 app.UseCors(policyBuilder =>
 {
     policyBuilder
@@ -39,7 +46,8 @@ app.UseCors(policyBuilder =>
 });
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.UseExceptionMiddlewareModule();
+
+/* RUN */
 
 app.Run();

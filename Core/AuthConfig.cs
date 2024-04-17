@@ -1,8 +1,9 @@
 using System.Text;
+using CommunityToolkit.Diagnostics;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
-namespace balancedbooks_backend.Core;
+namespace BalancedBooks_API.Core;
 
 public record JwtConfig(
     string Secret,
@@ -12,16 +13,17 @@ public record JwtConfig(
 
 public static class AuthConfigExtensions
 {
-    public static IServiceCollection AddAuthenticationDeps(this IServiceCollection services,
+    public static IServiceCollection AddJwtAuthentication(this IServiceCollection services,
         IConfigurationManager configuration)
     {
         const string authConfigKey = "JWT";
 
         services.Configure<JwtConfig>(configuration.GetSection(authConfigKey));
 
-        var authConfig = configuration.GetSection(authConfigKey).Get<JwtConfig>() ??
-                         throw new Exception("Config is missing");
-        
+        var authConfig = configuration.GetSection(authConfigKey).Get<JwtConfig>();
+
+        Guard.IsNotNull(authConfig);
+
         var (jwtSecret, audience, issuer) = authConfig;
 
         services

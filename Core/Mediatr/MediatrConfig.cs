@@ -2,11 +2,11 @@ using System.Reflection;
 using FluentValidation;
 using MediatR;
 
-namespace balancedbooks_backend.Core.Mediatr;
+namespace BalancedBooks_API.Core.Mediatr;
 
 public static class MediatrConfig
 {
-    public static void AddMediatrDeps(this IServiceCollection services)
+    public static IServiceCollection AddMediatrHandlers(this IServiceCollection services)
     {
         services
             .AddMediatR(
@@ -15,9 +15,9 @@ public static class MediatrConfig
             );
 
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-        
+
         // TODO: temp move to validator
-        
-        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+        return services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }

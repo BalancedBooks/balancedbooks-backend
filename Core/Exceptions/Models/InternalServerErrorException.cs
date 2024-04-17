@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace balancedbooks_backend.Core.Exceptions.Models;
+namespace BalancedBooks_API.Core.Exceptions.Models;
 
 /// <summary>
 /// Don't throw this. This is for "unhandled exceptions"

@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using Newtonsoft.Json;
 
-namespace balancedbooks_backend.Core.Exceptions.Models;
+namespace BalancedBooks_API.Core.Exceptions.Models;
 
 public class ServiceUnavailableException: HttpBaseException
 {
