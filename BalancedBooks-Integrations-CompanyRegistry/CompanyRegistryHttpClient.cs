@@ -1,14 +1,15 @@
 using System.Xml;
 using System.Xml.Serialization;
-using BalancedBooks_API.Core.Exceptions.Models;
-using BalancedBooks_API.ExternalIntegrations.CompanyRegistry.Models;
+using BalancedBooks_Integrations_CompanyRegistry.Config;
+using BalancedBooks_Integrations_CompanyRegistry.Models;
 using FluentResults;
-using Flurl;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using Flurl;
 using NullValueHandling = Flurl.NullValueHandling;
 
-namespace BalancedBooks_API.ExternalIntegrations.CompanyRegistry;
+namespace BalancedBooks_Integrations_CompanyRegistry;
 
 public class CompanyRegistryHttpClient
 {
@@ -46,7 +47,6 @@ public class CompanyRegistryHttpClient
         var courtsFormatted = courts != null ? string.Join(",", courts.ToArray()) : null;
 
         var url = BasePath
-                // filters
                 .AppendQueryParam("cegnev", companyName, NullValueHandling.Ignore)
                 .AppendQueryParam("adoszam", taxNumber, NullValueHandling.Ignore)
                 .AppendQueryParam("cegjegyzekszam", registrationNumber, NullValueHandling.Ignore)
@@ -75,7 +75,7 @@ public class CompanyRegistryHttpClient
 
         if (serializer.Deserialize(stream) is not Cegjegyzek xmlResult)
         {
-            throw new BadGatewayException("BAD_GATEWAY", "NOT_AVAILABLE");
+            throw new Exception("BAD_GATEWAY");
         }
 
         if (xmlResult.Kiadmany?.CegAdatlapok.Count == 0)
@@ -109,7 +109,7 @@ public class CompanyRegistryHttpClient
     /// <param name="hiba"></param>
     /// <returns></returns>
     /// <exception cref="BadGatewayException"></exception>
-    private static HttpBaseException HandleXmlErrors(Hiba? hiba)
+    /*private static HttpBaseException HandleXmlErrors(Hiba? hiba)
     {
         HttpBaseException exception = hiba?.Kod switch
         {
@@ -122,5 +122,5 @@ public class CompanyRegistryHttpClient
         };
 
         return exception;
-    }
+    }*/
 }

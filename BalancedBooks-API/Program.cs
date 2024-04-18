@@ -4,9 +4,10 @@ using BalancedBooks_API.Core.Environment;
 using BalancedBooks_API.Core.Exceptions;
 using BalancedBooks_API.Core.Mediatr;
 using BalancedBooks_API.Core.OpenAPI;
-using BalancedBooks_API.ExternalIntegrations.CompanyRegistry;
 using BalancedBooks_API.OpenApi;
 using BalancedBooks_API.PublicCompanyCertificate;
+using BalancedBooks_Integrations_CompanyRegistry;
+using CommunityToolkit.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,8 +23,20 @@ services
     .AddJwtAuthentication(configuration)
     .AddOpenApiDocumentation(configuration)
     .AddMediatrHandlers()
-    .AddExceptionMiddlewareSerializer()
-    .AddCompanyRegistryIntegration(configuration);
+    .AddExceptionMiddlewareSerializer();
+
+
+/*
+ * Company Registry Module
+ */
+
+var companyRegistryConfig = configuration
+    .GetSection(CompanyRegistryConfig.ConfigKey)
+    .Get<CompanyRegistryConfig>();
+
+Guard.IsNotNull(companyRegistryConfig);
+
+services.AddCompanyRegistryIntegrationModule(companyRegistryConfig);
 
 // init
 var app = builder.Build();

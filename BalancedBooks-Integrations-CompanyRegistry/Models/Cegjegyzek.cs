@@ -1,6 +1,6 @@
 using System.Xml.Serialization;
 
-namespace BalancedBooks_API.ExternalIntegrations.CompanyRegistry.Models;
+namespace BalancedBooks_Integrations_CompanyRegistry.Models;
 
 public enum CegAllapot
 {

@@ -1,7 +1,8 @@
 using System.Net.Http.Headers;
+using BalancedBooks_Integrations_CompanyRegistry.Config;
 using Microsoft.Extensions.Options;
 
-namespace BalancedBooks_API.ExternalIntegrations.CompanyRegistry;
+namespace BalancedBooks_Integrations_CompanyRegistry;
 
 public class CompanyRegistryHandler(IOptions<CompanyRegistryConfig> companyRegistryConfig) : DelegatingHandler
 {

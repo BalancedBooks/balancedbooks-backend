@@ -1,4 +1,4 @@
-using BalancedBooks_API.ExternalIntegrations.CompanyRegistry;
+using BalancedBooks_Integrations_CompanyRegistry;
 using MediatR;
 
 namespace BalancedBooks_API.PublicCompanyCertificate.Search;

@@ -1,9 +1,9 @@
 using System.Text;
 using CommunityToolkit.Diagnostics;
 using FluentValidation;
-using Flurl;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace BalancedBooks_API.ExternalIntegrations.CompanyRegistry;
+namespace BalancedBooks_Integrations_CompanyRegistry;
 
 public class CompanyRegistryConfig
 {
@@ -17,7 +17,13 @@ public class CompanyRegistryConfig
     public Uri ApiUrlAsUrl => new(ApiUrl);
 
     /* set it up during runtime */
-    public required string Base64Hash { get; set; }
+    public string Base64Hash {
+        get
+        {
+            var bytes = Encoding.UTF8.GetBytes($"{Username}:{Password}");
+            return Convert.ToBase64String(bytes);   
+        }
+    }
 }
 
 public class CompanyRegistryConfigValidator : AbstractValidator<CompanyRegistryConfig>
@@ -32,11 +38,10 @@ public class CompanyRegistryConfigValidator : AbstractValidator<CompanyRegistryC
 
 public static class CompanyRegistryIntegrationModule
 {
-    public static IServiceCollection AddCompanyRegistryIntegration(this IServiceCollection services,
-        ConfigurationManager configuration)
+    public static IServiceCollection AddCompanyRegistryIntegrationModule(this IServiceCollection services,
+        CompanyRegistryConfig config)
     {
         services.AddOptions<CompanyRegistryConfig>().BindConfiguration(CompanyRegistryConfig.ConfigKey);
-        var config = configuration.GetSection(CompanyRegistryConfig.ConfigKey).Get<CompanyRegistryConfig>();
 
         var validation = new CompanyRegistryConfigValidator();
 
@@ -45,12 +50,6 @@ public static class CompanyRegistryIntegrationModule
 
         // XML serialization requires it
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-
-        var bytes = Encoding.UTF8.GetBytes($"{config.Username}:{config.Password}");
-        var encoded = Convert.ToBase64String(bytes);
-
-        // set it up hash on run
-        services.PostConfigure<CompanyRegistryConfig>(customOptions => { customOptions.Base64Hash = encoded; });
 
         services
             .AddTransient<CompanyRegistryHandler>()

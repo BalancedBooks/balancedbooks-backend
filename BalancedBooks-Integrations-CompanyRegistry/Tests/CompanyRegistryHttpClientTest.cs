@@ -1,8 +1,7 @@
 using FluentAssertions;
-
-namespace BalancedBooks_API.ExternalIntegrations.CompanyRegistry.Tests;
-
 using NUnit.Framework;
+
+namespace BalancedBooks_Integrations_CompanyRegistry.Tests;
 
 [TestFixture]
 public class CompanyRegistryHttpClientTests
