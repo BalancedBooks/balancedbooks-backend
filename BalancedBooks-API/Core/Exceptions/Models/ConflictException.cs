@@ -3,6 +3,17 @@ using Newtonsoft.Json;
 
 namespace BalancedBooks_API.Core.Exceptions.Models;
 
+public interface IConflictException : IHttpBaseException
+{
+    string ErrorCode { get; }
+    string ErrorMessage { get; }
+
+    /// <summary>
+    /// For debug purpose. Log Trace Id
+    /// </summary>
+    string? TraceIdentifier { get; set; }
+}
+
 public class ConflictException : HttpBaseException
 {
     public override HttpStatusCode HttpStatusCode { get; } = HttpStatusCode.Conflict;

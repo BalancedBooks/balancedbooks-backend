@@ -20,6 +20,7 @@ public static class SwaggerConfig
         {
             opts.SchemaFilter<SetNonNullableAsRequiredSchemaFilter>();
 
+            opts.DescribeAllParametersInCamelCase();
             opts.SupportNonNullableReferenceTypes();
 
             opts.AddServer(new OpenApiServer

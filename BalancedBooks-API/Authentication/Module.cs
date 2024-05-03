@@ -1,4 +1,5 @@
-using BalancedBooks_API.Authentication.SignUp;
+using BalancedBooks_API.Authentication.SignInWithGoogle;
+using balancedBooks_API.Authentication.SignUpWithCredentials;
 using BalancedBooks_API.Core.Exceptions.Models;
 using MediatR;
 
@@ -10,13 +11,23 @@ public static class AuthenticationModule
     {
         application
             .MapGroup("/auth")
-            .MapPost("/signup", async (IMediator mediator, SignUpCommand command) => await mediator.Send(command))
-            .WithName(nameof(SignUpCommand))
+            .MapPost("/sign-in/google",
+                async (IMediator mediator, SignInWithGoogleCommand command) => await mediator.Send(command))
+            .WithName(nameof(SignInWithGoogleCommand))
             .WithGroupName("v1")
             .WithTags("Authentication")
-            .Produces<INotFoundException>(404)
             .Produces<IUnauthorizedException>(400)
+            .Produces<SignInWithGoogleCommandResponse>()
             .WithOpenApi();
 
+
+        application.MapGroup("/auth")
+            .MapPost("/sign-up/basic", async (IMediator mediator, SignUpWithCredentialsCommand command) => await mediator.Send(command))
+            .WithName(nameof(SignUpWithCredentialsCommand))
+            .WithGroupName("v1")
+            .WithTags("Authentication")
+            .Produces<IConflictException>(409)
+            .Produces<SignUpWithCredentialsResponse>()
+            .WithOpenApi();
     }
 }

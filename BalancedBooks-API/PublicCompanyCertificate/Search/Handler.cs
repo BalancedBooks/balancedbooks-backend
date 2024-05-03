@@ -4,9 +4,9 @@ using MediatR;
 namespace BalancedBooks_API.PublicCompanyCertificate.Search;
 
 public class SearchCompanyHandler(CompanyRegistryHttpClient companyRegistryHttpClient)
-    : IRequestHandler<SearchCompanyQuery, string>
+    : IRequestHandler<SearchCompanyQuery, SearchCompanyQueryResponse>
 {
-    public async Task<string> Handle(SearchCompanyQuery request,
+    public async Task<SearchCompanyQueryResponse> Handle(SearchCompanyQuery request,
         CancellationToken cancellationToken)
     {
         var companiesResult = await companyRegistryHttpClient.SearchCompaniesByAttributes(
@@ -14,7 +14,7 @@ public class SearchCompanyHandler(CompanyRegistryHttpClient companyRegistryHttpC
             taxNumber: request.TaxNumber
         );
         
-        return companiesResult.Value;
+        return new("", "");
     }
 }
 

@@ -1,5 +1,7 @@
+using BalancedBooks_API.Account;
+using balancedBooks_API.Authentication;
 using BalancedBooks_API.Authentication;
-using BalancedBooks_API.Core;
+using BalancedBooks_API.Core.Db;
 using BalancedBooks_API.Core.Environment;
 using BalancedBooks_API.Core.Exceptions;
 using BalancedBooks_API.Core.Mediatr;
@@ -20,11 +22,12 @@ services
     .AddCors()
     // customs
     .AddEnvironmentFlow(configuration)
-    .AddJwtAuthentication(configuration)
+    .AddAuthenticationConfig(configuration)
     .AddOpenApiDocumentation(configuration)
     .AddMediatrHandlers()
     .AddExceptionMiddlewareSerializer();
 
+services.AddDbConfiguration(configuration);
 
 /*
  * Company Registry Module
@@ -36,6 +39,7 @@ var companyRegistryConfig = configuration
 
 Guard.IsNotNull(companyRegistryConfig);
 
+services.AddHttpContextAccessor();
 services.AddCompanyRegistryIntegrationModule(companyRegistryConfig);
 
 // init
@@ -44,6 +48,7 @@ var app = builder.Build();
 /* MODULES */
 
 app.MapAuthenticationModuleRoutes();
+app.MapAccountModuleRoutes();
 app.MapPublicCompanyCertificateModuleRoutes();
 app.MapOpenApiModuleRoutes();
 
@@ -53,8 +58,10 @@ app.UseSwaggerDependencies();
 app.UseCors(policyBuilder =>
 {
     policyBuilder
-        .AllowAnyOrigin()
+        .WithOrigins("*.balancedbooks.dev")
+        .WithExposedHeaders("Set-Cookie")
         .AllowAnyMethod()
+        .AllowCredentials()
         .AllowAnyHeader();
 });
 app.UseAuthentication();
@@ -62,5 +69,10 @@ app.UseAuthorization();
 app.UseExceptionMiddlewareModule();
 
 /* RUN */
+var dbContext = app.Services.GetRequiredService<ApplicationDbContext>();
+
+await dbContext.Database.EnsureDeletedAsync();
+await dbContext.Database.EnsureCreatedAsync();
+
 
 app.Run();

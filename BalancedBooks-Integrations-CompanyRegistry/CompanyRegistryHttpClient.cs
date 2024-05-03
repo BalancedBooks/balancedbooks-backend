@@ -1,6 +1,5 @@
 using System.Xml;
 using System.Xml.Serialization;
-using BalancedBooks_Integrations_CompanyRegistry.Config;
 using BalancedBooks_Integrations_CompanyRegistry.Models;
 using FluentResults;
 using Microsoft.Extensions.Logging;

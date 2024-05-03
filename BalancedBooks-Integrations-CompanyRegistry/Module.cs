@@ -1,5 +1,4 @@
 using System.Text;
-using CommunityToolkit.Diagnostics;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -45,7 +44,6 @@ public static class CompanyRegistryIntegrationModule
 
         var validation = new CompanyRegistryConfigValidator();
 
-        Guard.IsNotNull(config);
         validation.ValidateAndThrow(config);
 
         // XML serialization requires it

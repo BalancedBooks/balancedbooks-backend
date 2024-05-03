@@ -1,5 +1,4 @@
 using System.Net.Http.Headers;
-using BalancedBooks_Integrations_CompanyRegistry.Config;
 using Microsoft.Extensions.Options;
 
 namespace BalancedBooks_Integrations_CompanyRegistry;
