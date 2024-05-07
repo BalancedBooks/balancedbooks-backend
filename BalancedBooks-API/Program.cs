@@ -1,6 +1,7 @@
 using BalancedBooks_API.Account;
 using balancedBooks_API.Authentication;
 using BalancedBooks_API.Authentication;
+using BalancedBooks_API.Core;
 using BalancedBooks_API.Core.Db;
 using BalancedBooks_API.Core.Environment;
 using BalancedBooks_API.Core.Exceptions;
@@ -57,8 +58,11 @@ app.MapOpenApiModuleRoutes();
 app.UseSwaggerDependencies();
 app.UseCors(policyBuilder =>
 {
+    var config = configuration.GetSection(HttpConfig.ConfigKey).Get<HttpConfig>();
+    Guard.IsNotNull(config);
+
     policyBuilder
-        .WithOrigins("*.balancedbooks.dev")
+        .WithOrigins($"*.{config.MainDomain}")
         .WithExposedHeaders("Set-Cookie")
         .AllowAnyMethod()
         .AllowCredentials()
@@ -71,7 +75,7 @@ app.UseExceptionMiddlewareModule();
 /* RUN */
 var dbContext = app.Services.GetRequiredService<ApplicationDbContext>();
 
-await dbContext.Database.EnsureDeletedAsync();
+// await dbContext.Database.EnsureDeletedAsync();
 await dbContext.Database.EnsureCreatedAsync();
 
 

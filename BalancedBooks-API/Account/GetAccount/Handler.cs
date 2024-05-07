@@ -9,11 +9,13 @@ namespace BalancedBooks_API.Account.GetAccount;
 
 public record GetAccountQuery: IRequest<GetAccountQueryResponse>;
 
-public class GetAccountQueryHandler(ApplicationDbContext dbContext, ClaimsPrincipal claimsPrincipal): IRequestHandler<GetAccountQuery, GetAccountQueryResponse>
+public class GetAccountQueryHandler(ApplicationDbContext dbContext, IHttpContextAccessor httpContextAccessor, UserManager<User> userManager): IRequestHandler<GetAccountQuery, GetAccountQueryResponse>
 {
     public async Task<GetAccountQueryResponse> Handle(GetAccountQuery request, CancellationToken cancellationToken)
     {
-        var f = claimsPrincipal;
+        ClaimsPrincipal currentUser = httpContextAccessor.HttpContext?.User;
+        var user = await userManager.FindByNameAsync(currentUser.Identity.Name);
+
         return new GetAccountQueryResponse();
     }
 }

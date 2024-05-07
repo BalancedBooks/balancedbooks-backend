@@ -1,6 +1,4 @@
-using System.Security.Cryptography;
 using BalancedBooks_API.Authentication.Utils;
-using BalancedBooks_API.Core.Utils;
 using CommunityToolkit.Diagnostics;
 using JWT.Algorithms;
 using JWT.Extensions.AspNetCore;

@@ -3,6 +3,7 @@ using System.Security.Claims;
 using balancedBooks_API.Authentication;
 using BalancedBooks_API.Authentication.Claims.Google;
 using BalancedBooks_API.Authentication.Utils;
+using BalancedBooks_API.Core;
 using BalancedBooks_API.Core.Db.Identity;
 using BalancedBooks_API.Core.Exceptions.Models;
 using FluentValidation;
@@ -31,6 +32,7 @@ public class SignInWithGoogleHandler(
     ILogger<SignInWithGoogleHandler> logger,
     UserManager<User> userManager,
     HttpClient httpClient,
+    IOptions<HttpConfig> httpConfig,
     SignInManager<User> signInManager,
     IHttpContextAccessor accessor
 )
@@ -123,7 +125,7 @@ public class SignInWithGoogleHandler(
             IsEssential = true,
             Secure = true,
             SameSite = SameSiteMode.Strict,
-            Domain = "balancedbooks.dev",
+            Domain = httpConfig.Value.MainDomain,
             Expires = DateTime.UtcNow.AddDays(14)
         };
 

@@ -6,6 +6,7 @@ using BalancedBooks_API.Core.Exceptions.Models;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Zitadel.Org.V2beta;
 
 namespace balancedBooks_API.Authentication.SignUpWithCredentials;
 
