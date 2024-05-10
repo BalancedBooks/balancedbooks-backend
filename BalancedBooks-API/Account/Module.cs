@@ -1,8 +1,8 @@
-using BalancedBooks_API.Account.GetAccount;
-using BalancedBooks_API.Core.Exceptions.Models;
+using BalancedBooksAPI.Account.GetAccount;
+using BalancedBooksAPI.Core.Exceptions.Models;
 using MediatR;
 
-namespace BalancedBooks_API.Account;
+namespace BalancedBooksAPI.Account;
 
 public static class AccountModule
 {

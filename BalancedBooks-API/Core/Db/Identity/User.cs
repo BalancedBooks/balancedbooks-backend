@@ -1,7 +1,7 @@
-using BalancedBooks_API.Core.Db.Interceptors;
+using BalancedBooksAPI.Core.Db.Interceptors;
 using Microsoft.AspNetCore.Identity;
 
-namespace BalancedBooks_API.Core.Db.Identity;
+namespace BalancedBooksAPI.Core.Db.Identity;
 
 public class User : IdentityUser<Guid>, IPublicEntity
 {

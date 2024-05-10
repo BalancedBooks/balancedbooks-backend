@@ -1,7 +1,7 @@
-using BalancedBooks_API.Core;
+using BalancedBooksAPI.Core;
 using Microsoft.Extensions.Options;
 
-namespace BalancedBooks_API.OpenApi;
+namespace BalancedBooksAPI.OpenApi;
 
 public static class OpenApiModule
 {

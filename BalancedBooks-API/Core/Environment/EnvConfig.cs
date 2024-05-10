@@ -3,7 +3,7 @@ using DotNetEnv;
 using DotNetEnv.Configuration;
 using FluentValidation;
 
-namespace BalancedBooks_API.Core.Environment;
+namespace BalancedBooksAPI.Core.Environment;
 
 public class AspNetEnvironmentConfig
 {

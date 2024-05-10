@@ -1,4 +1,4 @@
-namespace BalancedBooks_API.Core;
+namespace BalancedBooksAPI.Core;
 
 public class HttpConfig
 {

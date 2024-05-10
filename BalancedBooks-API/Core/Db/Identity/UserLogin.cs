@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace BalancedBooks_API.Core.Db.Identity;
+namespace BalancedBooksAPI.Core.Db.Identity;
 
 public class UserLogin : IdentityUserLogin<Guid>
 {

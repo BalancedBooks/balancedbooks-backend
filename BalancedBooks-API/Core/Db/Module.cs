@@ -1,8 +1,8 @@
-using BalancedBooks_API.Core.Db.Identity;
+using BalancedBooksAPI.Core.Db.Identity;
 using CommunityToolkit.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 
-namespace BalancedBooks_API.Core.Db;
+namespace BalancedBooksAPI.Core.Db;
 
 public class DbConfiguration
 {

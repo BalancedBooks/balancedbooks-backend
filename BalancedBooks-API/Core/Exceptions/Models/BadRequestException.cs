@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using Newtonsoft.Json;
 
-namespace BalancedBooks_API.Core.Exceptions.Models;
+namespace BalancedBooksAPI.Core.Exceptions.Models;
 
 public record ValidationError(string? FieldName, string Code, string Message)
 {

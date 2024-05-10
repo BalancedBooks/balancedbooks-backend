@@ -1,13 +1,16 @@
-using BalancedBooks_API.Authentication.Utils;
+using BalancedBooksAPI.Authentication.Core;
 using CommunityToolkit.Diagnostics;
 using JWT.Algorithms;
 using JWT.Extensions.AspNetCore;
 
-namespace balancedBooks_API.Authentication;
+namespace BalancedBooksAPI.Authentication;
 
 public class AuthConfig
 {
     public const string ConfigKey = "AUTH";
+
+    [ConfigurationKeyName("DOMAIN")] public required string Domain { get; init; }
+    [ConfigurationKeyName("COOKIE_NAME")] public required string CookieName { get; init; }
 
     [ConfigurationKeyName("JWT_PRIV_KEY_BASE64")]
     public required string PrivateKeyBase64 { get; init; }
@@ -40,9 +43,10 @@ public static class AuthConfigExtensions
                 opts.DefaultChallengeScheme = JwtAuthenticationDefaults.AuthenticationScheme;
             })
             .AddJwt();
-        
+
         var (publicRsa, privateRsa) =
-            AuthUtils.GetSecureRSAKeys(config.PublicKeyBase64, config.PrivateKeyBase64, config.PrivateSignKey);
+            AuthenticationService.GetSecureRsaKeys(config.PublicKeyBase64, config.PrivateKeyBase64,
+                config.PrivateSignKey);
 
         services.AddSingleton<IAlgorithmFactory>(new RSAlgorithmFactory(publicRsa, privateRsa));
 

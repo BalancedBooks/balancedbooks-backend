@@ -1,4 +1,4 @@
-namespace BalancedBooks_API.Core.Utils;
+namespace BalancedBooksAPI.Core.Utils;
 
 public static class StringExtensions
 {

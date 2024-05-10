@@ -1,7 +1,7 @@
 using BalancedBooks_Integrations_CompanyRegistry;
 using MediatR;
 
-namespace BalancedBooks_API.PublicCompanyCertificate.Search;
+namespace BalancedBooksAPI.PublicCompanyCertificate.Search;
 
 public class SearchCompanyHandler(CompanyRegistryHttpClient companyRegistryHttpClient)
     : IRequestHandler<SearchCompanyQuery, SearchCompanyQueryResponse>

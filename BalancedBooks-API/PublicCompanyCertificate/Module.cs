@@ -1,8 +1,8 @@
-using BalancedBooks_API.Core.Exceptions.Models;
-using BalancedBooks_API.PublicCompanyCertificate.Search;
+using BalancedBooksAPI.Core.Exceptions.Models;
+using BalancedBooksAPI.PublicCompanyCertificate.Search;
 using MediatR;
 
-namespace BalancedBooks_API.PublicCompanyCertificate;
+namespace BalancedBooksAPI.PublicCompanyCertificate;
 
 public static class PublicCompanyCertificateModule
 {

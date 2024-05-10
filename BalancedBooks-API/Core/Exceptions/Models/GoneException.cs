@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using Newtonsoft.Json;
 
-namespace BalancedBooks_API.Core.Exceptions.Models;
+namespace BalancedBooksAPI.Core.Exceptions.Models;
 
 public class GoneException: HttpBaseException
 {

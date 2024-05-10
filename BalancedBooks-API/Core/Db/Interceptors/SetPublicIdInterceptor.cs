@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using NanoidDotNet;
 
-namespace BalancedBooks_API.Core.Db.Interceptors;
+namespace BalancedBooksAPI.Core.Db.Interceptors;
 
 internal interface IPublicEntity
 {

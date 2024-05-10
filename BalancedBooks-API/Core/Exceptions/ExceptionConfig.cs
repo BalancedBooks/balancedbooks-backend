@@ -1,4 +1,4 @@
-namespace BalancedBooks_API.Core.Exceptions;
+namespace BalancedBooksAPI.Core.Exceptions;
 
 public static class ExceptionConfig
 {

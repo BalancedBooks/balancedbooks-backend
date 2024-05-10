@@ -1,14 +1,15 @@
 using System.Security.Claims;
-using BalancedBooks_API.Authentication.Claims.Core;
-using BalancedBooks_API.Core.Db;
-using BalancedBooks_API.Core.Db.Identity;
-using BalancedBooks_API.Core.Exceptions.Models;
+using BalancedBooksAPI.Authentication.Claims.Core;
+using BalancedBooksAPI.Authentication.Core;
+using BalancedBooksAPI.Core.Db;
+using BalancedBooksAPI.Core.Exceptions.Models;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Zitadel.Org.V2beta;
+using Microsoft.Extensions.Options;
+using User = BalancedBooksAPI.Core.Db.Identity.User;
 
-namespace balancedBooks_API.Authentication.SignUpWithCredentials;
+namespace BalancedBooksAPI.Authentication.SignUpWithCredentials;
 
 public class Validator : AbstractValidator<SignUpWithCredentialsCommand>
 {
@@ -58,7 +59,10 @@ public record SignUpWithCredentialsCommand(
 public class SignUpWithCredentialsHandler(
     UserManager<User> userManager,
     SignInManager<User> signInManager,
-    ApplicationDbContext dbContext)
+    AuthenticationService authenticationService,
+    ApplicationDbContext dbContext,
+    IOptionsMonitor<AuthConfig> authConfig,
+    IHttpContextAccessor accessor)
     : IRequestHandler<SignUpWithCredentialsCommand, SignUpWithCredentialsResponse>
 {
     public async Task<SignUpWithCredentialsResponse> Handle(SignUpWithCredentialsCommand request,
@@ -90,15 +94,21 @@ public class SignUpWithCredentialsHandler(
             new(BalancedBooksCoreClaims.EmailAddress, emailAddress),
             new(BalancedBooksCoreClaims.Username, emailAddress),
             new(BalancedBooksCoreClaims.FirstName, firstName),
-            new(BalancedBooksCoreClaims.LastName, lastName),
+            new(BalancedBooksCoreClaims.LastName, lastName)
         };
+
+        var accessToken =
+            authenticationService.GenerateAccessToken(user.Id.ToString(), new List<KeyValuePair<string, object>>());
 
         await userManager.AddClaimsAsync(user, new List<Claim>(claims));
         await userManager.AddPasswordAsync(user, password);
 
         await signInManager.PasswordSignInAsync(user, password, true, false);
 
-        return new("");
+        accessor.HttpContext?.Response.Cookies.SetAccessTokenCookie(accessToken, authConfig.CurrentValue.CookieName,
+            authConfig.CurrentValue.Domain);
+
+        return new(accessToken);
     }
 }
 

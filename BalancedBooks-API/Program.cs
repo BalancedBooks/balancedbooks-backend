@@ -1,15 +1,15 @@
-using BalancedBooks_API.Account;
-using balancedBooks_API.Authentication;
-using BalancedBooks_API.Authentication;
-using BalancedBooks_API.Core;
-using BalancedBooks_API.Core.Db;
-using BalancedBooks_API.Core.Environment;
-using BalancedBooks_API.Core.Exceptions;
-using BalancedBooks_API.Core.Mediatr;
-using BalancedBooks_API.Core.OpenAPI;
-using BalancedBooks_API.OpenApi;
-using BalancedBooks_API.PublicCompanyCertificate;
 using BalancedBooks_Integrations_CompanyRegistry;
+using BalancedBooksAPI.Account;
+using BalancedBooksAPI.Authentication;
+using BalancedBooksAPI.Authentication.Core;
+using BalancedBooksAPI.Core;
+using BalancedBooksAPI.Core.Db;
+using BalancedBooksAPI.Core.Environment;
+using BalancedBooksAPI.Core.Exceptions;
+using BalancedBooksAPI.Core.Mediatr;
+using BalancedBooksAPI.Core.OpenAPI;
+using BalancedBooksAPI.OpenApi;
+using BalancedBooksAPI.PublicCompanyCertificate;
 using CommunityToolkit.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,6 +29,7 @@ services
     .AddExceptionMiddlewareSerializer();
 
 services.AddDbConfiguration(configuration);
+services.AddSingleton<AuthenticationService>();
 
 /*
  * Company Registry Module
@@ -75,7 +76,7 @@ app.UseExceptionMiddlewareModule();
 /* RUN */
 var dbContext = app.Services.GetRequiredService<ApplicationDbContext>();
 
-// await dbContext.Database.EnsureDeletedAsync();
+await dbContext.Database.EnsureDeletedAsync();
 await dbContext.Database.EnsureCreatedAsync();
 
 

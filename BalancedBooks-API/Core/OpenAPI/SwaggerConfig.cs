@@ -1,7 +1,7 @@
 using CommunityToolkit.Diagnostics;
 using Microsoft.OpenApi.Models;
 
-namespace BalancedBooks_API.Core.OpenAPI;
+namespace BalancedBooksAPI.Core.OpenAPI;
 
 public static class SwaggerConfig
 {

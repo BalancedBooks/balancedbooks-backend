@@ -2,7 +2,7 @@ using System.Reflection;
 using FluentValidation;
 using MediatR;
 
-namespace BalancedBooks_API.Core.Mediatr;
+namespace BalancedBooksAPI.Core.Mediatr;
 
 public static class MediatrConfig
 {

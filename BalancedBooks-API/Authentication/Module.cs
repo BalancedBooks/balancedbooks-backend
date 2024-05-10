@@ -1,31 +1,30 @@
-using BalancedBooks_API.Authentication.SignInWithGoogle;
-using balancedBooks_API.Authentication.SignUpWithCredentials;
-using BalancedBooks_API.Core.Exceptions.Models;
+using BalancedBooksAPI.Authentication.SignInWithGoogle;
+using BalancedBooksAPI.Authentication.SignUpWithCredentials;
+using BalancedBooksAPI.Core.Exceptions.Models;
 using MediatR;
 
-namespace BalancedBooks_API.Authentication;
+namespace BalancedBooksAPI.Authentication;
 
 public static class AuthenticationModule
 {
     public static void MapAuthenticationModuleRoutes(this WebApplication application)
     {
-        application
+        var routeBase = application
             .MapGroup("/auth")
+            .WithGroupName("v1")
+            .WithTags("Authentication");
+        
+        routeBase
             .MapPost("/sign-in/google",
                 async (IMediator mediator, SignInWithGoogleCommand command) => await mediator.Send(command))
             .WithName(nameof(SignInWithGoogleCommand))
-            .WithGroupName("v1")
-            .WithTags("Authentication")
             .Produces<IUnauthorizedException>(400)
             .Produces<SignInWithGoogleCommandResponse>()
             .WithOpenApi();
 
-
-        application.MapGroup("/auth")
+        routeBase
             .MapPost("/sign-up/basic", async (IMediator mediator, SignUpWithCredentialsCommand command) => await mediator.Send(command))
             .WithName(nameof(SignUpWithCredentialsCommand))
-            .WithGroupName("v1")
-            .WithTags("Authentication")
             .Produces<IConflictException>(409)
             .Produces<SignUpWithCredentialsResponse>()
             .WithOpenApi();

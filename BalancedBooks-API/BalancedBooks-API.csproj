@@ -4,11 +4,13 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <RootNamespace>BalancedBooks_API</RootNamespace>
+        <RootNamespace>BalancedBooksAPI</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Bogus" Version="35.5.0" />
+        <PackageReference Include="Casbin.NET" Version="2.7.0" />
+        <PackageReference Include="Casbin.NET.Adapter.EFCore" Version="2.3.0" />
         <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.2.2" />
         <PackageReference Include="CSharpFunctionalExtensions" Version="2.41.0" />
         <PackageReference Include="DotNetEnv" Version="3.0.0" />
@@ -33,6 +35,11 @@
         </PackageReference>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.Diagnostics.Testing" Version="8.4.0" />
+        <PackageReference Include="Microsoft.Kiota.Abstractions" Version="1.9.0" />
+        <PackageReference Include="Microsoft.Kiota.Serialization.Form" Version="1.2.0" />
+        <PackageReference Include="Microsoft.Kiota.Serialization.Json" Version="1.3.0" />
+        <PackageReference Include="Microsoft.Kiota.Serialization.Multipart" Version="1.1.4" />
+        <PackageReference Include="Microsoft.Kiota.Serialization.Text" Version="1.2.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
         <PackageReference Include="Nanoid" Version="3.0.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
@@ -46,7 +53,6 @@
         <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
         <PackageReference Include="Stripe.net" Version="44.4.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
-        <PackageReference Include="Zitadel" Version="6.1.2" />
     </ItemGroup>
 
     <ItemGroup>
@@ -55,6 +61,10 @@
 
     <ItemGroup>
       <Folder Include="Migrations\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="output\kiota-lock.json" />
     </ItemGroup>
 
 </Project>

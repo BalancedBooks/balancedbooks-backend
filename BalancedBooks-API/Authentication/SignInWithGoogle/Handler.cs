@@ -1,11 +1,10 @@
 using System.Net.Http.Headers;
 using System.Security.Claims;
-using balancedBooks_API.Authentication;
-using BalancedBooks_API.Authentication.Claims.Google;
-using BalancedBooks_API.Authentication.Utils;
-using BalancedBooks_API.Core;
-using BalancedBooks_API.Core.Db.Identity;
-using BalancedBooks_API.Core.Exceptions.Models;
+using BalancedBooksAPI.Authentication.Claims.Google;
+using BalancedBooksAPI.Authentication.Core;
+using BalancedBooksAPI.Core;
+using BalancedBooksAPI.Core.Db.Identity;
+using BalancedBooksAPI.Core.Exceptions.Models;
 using FluentValidation;
 using Flurl;
 using Google.Apis.PeopleService.v1.Data;
@@ -15,7 +14,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
-namespace BalancedBooks_API.Authentication.SignInWithGoogle;
+namespace BalancedBooksAPI.Authentication.SignInWithGoogle;
 
 public record SignInWithGoogleCommand(string AccessToken) : IRequest<SignInWithGoogleCommandResponse>;
 
@@ -72,7 +71,8 @@ public class SignInWithGoogleHandler(
             throw exceptionForDataIssue;
         }
 
-        var user = await userManager.FindByLoginAsync("google", googleToken) ?? await userManager.FindByEmailAsync(emailAddress);
+        var user = await userManager.FindByLoginAsync("google", googleToken) ??
+                   await userManager.FindByEmailAsync(emailAddress);
 
         var claims = new List<Claim>
         {
@@ -108,7 +108,8 @@ public class SignInWithGoogleHandler(
             new ExternalLoginInfo(googlePrincipal, "google", accountId, "Google"));
 
         var (publicRsa, privateRsa) =
-            AuthUtils.GetSecureRSAKeys(config.PublicKeyBase64, config.PrivateKeyBase64, config.PrivateSignKey);
+            AuthenticationService.GetSecureRsaKeys(config.PublicKeyBase64, config.PrivateKeyBase64,
+                config.PrivateSignKey);
 
         var expire = DateTimeOffset.UtcNow.AddHours(int.Parse(config.AccessTokenExpireDays)).ToUnixTimeSeconds();
 

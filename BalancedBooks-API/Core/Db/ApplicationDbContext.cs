@@ -1,9 +1,9 @@
-using BalancedBooks_API.Core.Db.Identity;
-using BalancedBooks_API.Core.Db.Interceptors;
+using BalancedBooksAPI.Core.Db.Identity;
+using BalancedBooksAPI.Core.Db.Interceptors;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace BalancedBooks_API.Core.Db;
+namespace BalancedBooksAPI.Core.Db;
 
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
     : IdentityDbContext<User, Role, Guid, UserClaim, UserRole, UserLogin, RoleClaim,

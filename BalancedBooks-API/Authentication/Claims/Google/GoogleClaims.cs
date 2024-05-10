@@ -1,4 +1,4 @@
-namespace BalancedBooks_API.Authentication.Claims.Google;
+namespace BalancedBooksAPI.Authentication.Claims.Google;
 
 public struct GoogleClaims
 {
