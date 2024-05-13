@@ -98,9 +98,9 @@ public class SignUpWithCredentialsHandler(
         };
 
         var accessToken =
-            authenticationService.GenerateAccessToken(user.Id.ToString(), new List<KeyValuePair<string, object>>());
+            authenticationService.GenerateAccessToken(claims);
 
-        await userManager.AddClaimsAsync(user, new List<Claim>(claims));
+        await userManager.AddClaimsAsync(user, claims);
         await userManager.AddPasswordAsync(user, password);
 
         await signInManager.PasswordSignInAsync(user, password, true, false);

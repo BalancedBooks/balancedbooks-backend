@@ -2,7 +2,6 @@ using BalancedBooks_Integrations_CompanyRegistry;
 using BalancedBooksAPI.Account;
 using BalancedBooksAPI.Authentication;
 using BalancedBooksAPI.Authentication.Core;
-using BalancedBooksAPI.Core;
 using BalancedBooksAPI.Core.Db;
 using BalancedBooksAPI.Core.Environment;
 using BalancedBooksAPI.Core.Exceptions;
@@ -20,7 +19,21 @@ var configuration = builder.Configuration;
 /* DEPENDENCIES */
 
 services
-    .AddCors()
+    .AddCors(options =>
+    {
+        options.AddPolicy("CorsFrontend", policyBuilder =>
+        {
+            var authConfig = configuration.GetSection(AuthConfig.ConfigKey).Get<AuthConfig>();
+            Guard.IsNotNull(authConfig);
+
+            policyBuilder
+                .WithOrigins($"*.{authConfig.Domain}")
+                .WithExposedHeaders("Set-Cookie")
+                .AllowAnyMethod()
+                .AllowCredentials()
+                .AllowAnyHeader();
+        });
+    })
     // customs
     .AddEnvironmentFlow(configuration)
     .AddAuthenticationConfig(configuration)
@@ -56,22 +69,18 @@ app.MapOpenApiModuleRoutes();
 
 /* MIDDLEWARES */
 
-app.UseSwaggerDependencies();
-app.UseCors(policyBuilder =>
+app.Use(async (context, next) =>
 {
-    var config = configuration.GetSection(HttpConfig.ConfigKey).Get<HttpConfig>();
-    Guard.IsNotNull(config);
-
-    policyBuilder
-        .WithOrigins($"*.{config.MainDomain}")
-        .WithExposedHeaders("Set-Cookie")
-        .AllowAnyMethod()
-        .AllowCredentials()
-        .AllowAnyHeader();
+    
+    await next(context);
 });
+
+app.UseSwaggerDependencies();
+app.UseCors("CorsFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseExceptionMiddlewareModule();
+app.UseHttpsRedirection();
 
 /* RUN */
 var dbContext = app.Services.GetRequiredService<ApplicationDbContext>();

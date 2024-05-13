@@ -1,15 +1,13 @@
 using System.Net.Http.Headers;
 using System.Security.Claims;
+using BalancedBooksAPI.Authentication.Claims.Core;
 using BalancedBooksAPI.Authentication.Claims.Google;
 using BalancedBooksAPI.Authentication.Core;
-using BalancedBooksAPI.Core;
 using BalancedBooksAPI.Core.Db.Identity;
 using BalancedBooksAPI.Core.Exceptions.Models;
 using FluentValidation;
 using Flurl;
 using Google.Apis.PeopleService.v1.Data;
-using JWT.Algorithms;
-using JWT.Builder;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
@@ -27,12 +25,11 @@ public class CommandValidator : AbstractValidator<SignInWithGoogleCommand>
 }
 
 public class SignInWithGoogleHandler(
-    IOptions<AuthConfig> authConfig,
     ILogger<SignInWithGoogleHandler> logger,
     UserManager<User> userManager,
     HttpClient httpClient,
-    IOptions<HttpConfig> httpConfig,
-    SignInManager<User> signInManager,
+    IOptionsMonitor<AuthConfig> authConfig,
+    AuthenticationService authenticationService,
     IHttpContextAccessor accessor
 )
     : IRequestHandler<SignInWithGoogleCommand, SignInWithGoogleCommandResponse>
@@ -40,7 +37,6 @@ public class SignInWithGoogleHandler(
     public async Task<SignInWithGoogleCommandResponse> Handle(SignInWithGoogleCommand request,
         CancellationToken cancellationToken)
     {
-        var config = authConfig.Value;
         var googleToken = request.AccessToken;
 
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", googleToken);
@@ -76,12 +72,10 @@ public class SignInWithGoogleHandler(
 
         var claims = new List<Claim>
         {
-            new(GoogleClaims.FirstName, givenName ?? throw exceptionForDataIssue),
-            new(GoogleClaims.LastName, familyName ?? throw exceptionForDataIssue),
+            new(BalancedBooksCoreClaims.FirstName, givenName ?? throw exceptionForDataIssue),
+            new(BalancedBooksCoreClaims.LastName, familyName ?? throw exceptionForDataIssue),
             new(GoogleClaims.Id, accountId ?? throw exceptionForDataIssue),
-            new(GoogleClaims.EmailAddress, emailAddress),
-            new(GoogleClaims.EmailAddressVerified,
-                emailAddressMeta?.Metadata.Verified.ToString() ?? throw exceptionForDataIssue)
+            new(BalancedBooksCoreClaims.EmailAddress, emailAddress ?? throw exceptionForDataIssue),
         };
 
         var googleIdentity = new ClaimsIdentity(claims, "google");
@@ -91,8 +85,8 @@ public class SignInWithGoogleHandler(
         {
             user = new User
             {
-                UserName = emailAddressMeta.Value,
-                Email = emailAddressMeta.Value,
+                UserName = emailAddress,
+                Email = emailAddress,
                 EmailConfirmed = true,
             };
             await userManager.CreateAsync(user);
@@ -107,30 +101,11 @@ public class SignInWithGoogleHandler(
         await userManager.AddLoginAsync(user,
             new ExternalLoginInfo(googlePrincipal, "google", accountId, "Google"));
 
-        var (publicRsa, privateRsa) =
-            AuthenticationService.GetSecureRsaKeys(config.PublicKeyBase64, config.PrivateKeyBase64,
-                config.PrivateSignKey);
+        var accessToken =
+            authenticationService.GenerateAccessToken(claims);
 
-        var expire = DateTimeOffset.UtcNow.AddHours(int.Parse(config.AccessTokenExpireDays)).ToUnixTimeSeconds();
-
-        var accessToken = JwtBuilder.Create()
-            .WithAlgorithm(new RS256Algorithm(publicRsa, privateRsa))
-            .MustVerifySignature()
-            .AddClaim("userId", user.Id)
-            .AddClaim("exp", expire)
-            .Encode();
-
-        var cookieOptions = new CookieOptions()
-        {
-            HttpOnly = true,
-            IsEssential = true,
-            Secure = true,
-            SameSite = SameSiteMode.Strict,
-            Domain = httpConfig.Value.MainDomain,
-            Expires = DateTime.UtcNow.AddDays(14)
-        };
-
-        accessor.HttpContext?.Response.Cookies.Append("balancedbooks_auth_session", accessToken, cookieOptions);
+        accessor.HttpContext?.Response.Cookies.SetAccessTokenCookie(accessToken, authConfig.CurrentValue.CookieName,
+            authConfig.CurrentValue.Domain);
 
         return new SignInWithGoogleCommandResponse(accessToken);
     }

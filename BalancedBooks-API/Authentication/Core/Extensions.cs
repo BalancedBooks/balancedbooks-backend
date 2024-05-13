@@ -11,11 +11,24 @@ public static class AuthUtils
             HttpOnly = true,
             IsEssential = true,
             Secure = true,
-            SameSite = SameSiteMode.Strict,
+            SameSite = SameSiteMode.Lax,
             Domain = domain,
             Expires = DateTime.UtcNow.AddDays(expireDays)
         };
 
         cookies.Append(cookieName, accessToken, cookieOptions);
+    }
+
+    public static void DeleteCookie(this IResponseCookies cookies, string domain, string cookieName)
+    {
+        cookies.Append(cookieName, "", new CookieOptions
+        {
+            HttpOnly = true,
+            IsEssential = true,
+            Secure = true,
+            SameSite = SameSiteMode.Lax,
+            Domain = domain,
+            Expires = DateTime.Now.AddDays(-1)
+        });
     }
 }

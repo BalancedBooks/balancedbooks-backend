@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Security.Cryptography;
 using BalancedBooksAPI.Core.Utils;
 using JWT.Algorithms;
@@ -22,7 +23,7 @@ public class AuthenticationService(IOptionsMonitor<AuthConfig> config)
         return (publicRsa, privateRsa);
     }
 
-    public string GenerateAccessToken(string userId, IEnumerable<KeyValuePair<string, object>>? claims,
+    public string GenerateAccessToken(IEnumerable<Claim> claims,
         int? expireInDays = 14)
     {
         var tokenExpireDays = config.CurrentValue.AccessTokenExpireDays;
@@ -34,9 +35,8 @@ public class AuthenticationService(IOptionsMonitor<AuthConfig> config)
         return JwtBuilder.Create()
             .WithAlgorithm(new RS256Algorithm(publicRsa, privateRsa))
             .MustVerifySignature()
-            .AddClaim("userId", userId)
             .AddClaim("exp", expire)
-            .AddClaims(claims)
+            .AddClaims(claims.Select((claim) => new KeyValuePair<string, object>(claim.Type, claim.Value)))
             .Encode();
     }
 }
