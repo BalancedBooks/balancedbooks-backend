@@ -78,7 +78,6 @@ public static class AuthConfigExtensions
                 {
                     OnMessageReceived = context =>
                     {
-                        context.Request.Cookies.TryGetValue(config.CookieName, out string value);
                         context.Token = context.Request.Cookies[config.CookieName];
                         return Task.CompletedTask;
                     }
