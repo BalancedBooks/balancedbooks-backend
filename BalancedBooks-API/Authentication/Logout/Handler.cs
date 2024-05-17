@@ -1,21 +1,48 @@
+using BalancedBooksAPI.Authentication.Claims.Core;
 using BalancedBooksAPI.Authentication.Core;
+using BalancedBooksAPI.Core.Db;
+using BalancedBooksAPI.Core.Exceptions.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 namespace BalancedBooksAPI.Authentication.Logout;
 
-public class LogoutCommand : IRequest<LogoutCommandResponse>;
+public class SignOutCommand : IRequest<SignOutCommandResponse>;
 
-public class LogoutHandler(IHttpContextAccessor accessor, IOptionsMonitor<AuthConfig> authConfig)
-    : IRequestHandler<LogoutCommand, LogoutCommandResponse>
+public class SignOutHandler(
+    IHttpContextAccessor accessor,
+    IOptionsMonitor<AuthConfig> authConfig,
+    ApplicationDbContext dbContext)
+    : IRequestHandler<SignOutCommand, SignOutCommandResponse>
 {
-    public Task<LogoutCommandResponse> Handle(LogoutCommand command, CancellationToken cancellationToken)
+    public async Task<SignOutCommandResponse> Handle(SignOutCommand command, CancellationToken cancellationToken)
     {
+        var userId = accessor.HttpContext?.User.Claims.FirstOrDefault(x => x.Type == BalancedBooksCoreClaims.Id)?.Value;
+
+        if (userId is null)
+        {
+            throw new UnauthorizedException("USER_NOT_FOUND", "User is absent");
+        }
+
         var success = accessor.HttpContext?.Request.Cookies[authConfig.CurrentValue.CookieName];
+
         accessor.HttpContext?.Response.Cookies.DeleteCookie(authConfig.CurrentValue.Domain,
             authConfig.CurrentValue.CookieName);
-        return Task.FromResult<LogoutCommandResponse>(new(success is not null));
+
+        var userSession =
+            await dbContext.UserSessions.SingleOrDefaultAsync(x => x.UserId == Guid.Parse(userId), cancellationToken);
+
+        if (userSession is null)
+        {
+            return new(success is not null);
+        }
+
+        dbContext.UserSessions.Remove(userSession);
+        await dbContext.SaveChangesAsync(cancellationToken);
+
+        return new(success is not null);
     }
 }
 
-public class LogoutCommandResponse(bool Success);
+public class SignOutCommandResponse(bool Success);

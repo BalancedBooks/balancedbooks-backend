@@ -2,12 +2,12 @@ using System.Security.Claims;
 using BalancedBooksAPI.Authentication.Claims.Core;
 using BalancedBooksAPI.Authentication.Core;
 using BalancedBooksAPI.Core.Db;
+using BalancedBooksAPI.Core.Db.Core;
 using BalancedBooksAPI.Core.Exceptions.Models;
 using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using User = BalancedBooksAPI.Core.Db.Identity.User;
 
 namespace BalancedBooksAPI.Authentication.SignUpWithCredentials;
 
@@ -57,8 +57,6 @@ public record SignUpWithCredentialsCommand(
     : IRequest<SignUpWithCredentialsResponse>;
 
 public class SignUpWithCredentialsHandler(
-    UserManager<User> userManager,
-    SignInManager<User> signInManager,
     AuthenticationService authenticationService,
     ApplicationDbContext dbContext,
     IOptionsMonitor<AuthConfig> authConfig,
@@ -70,45 +68,50 @@ public class SignUpWithCredentialsHandler(
     {
         var (firstName, lastName, emailAddress, _, password) = request;
 
-        var existingUser = await userManager.FindByEmailAsync(emailAddress);
+        var existingUser = await dbContext.Users.FirstOrDefaultAsync(x => x.Email == emailAddress, cancellationToken);
 
         if (existingUser is not null)
         {
             throw new ConflictException("USER_ALREADY_EXISTS", "User already exists with such email");
         }
 
+        var (passwordHash, salt) = authenticationService.HashPassword(password);
+
         var user = new User
         {
-            UserName = emailAddress,
+            FirstName = firstName,
+            LastName = lastName,
             Email = emailAddress,
-            EmailConfirmed = false,
+            PasswordSalt = salt,
+            PasswordHash = passwordHash
         };
 
         // TODO: send email
 
-        await userManager.CreateAsync(user);
+        await dbContext.Users.AddAsync(user, cancellationToken);
 
         var claims = new List<Claim>
         {
             new(BalancedBooksCoreClaims.Id, user.Id.ToString()),
-            new(BalancedBooksCoreClaims.EmailAddress, emailAddress),
-            new(BalancedBooksCoreClaims.Username, emailAddress),
-            new(BalancedBooksCoreClaims.FirstName, firstName),
-            new(BalancedBooksCoreClaims.LastName, lastName)
         };
 
-        var accessToken =
+        var generatedToken =
             authenticationService.GenerateAccessToken(claims);
+        
+        var userSession = new UserSession
+        {
+            AccessToken = generatedToken,
+            UserId = user.Id
+        };
 
-        await userManager.AddClaimsAsync(user, claims);
-        await userManager.AddPasswordAsync(user, password);
+        await dbContext.UserSessions.AddAsync(userSession, cancellationToken);
+        
+        await dbContext.SaveChangesAsync(cancellationToken);
 
-        await signInManager.PasswordSignInAsync(user, password, true, false);
-
-        accessor.HttpContext?.Response.Cookies.SetAccessTokenCookie(accessToken, authConfig.CurrentValue.CookieName,
+        accessor.HttpContext?.Response.Cookies.SetAccessTokenCookie(generatedToken, authConfig.CurrentValue.CookieName,
             authConfig.CurrentValue.Domain);
 
-        return new(accessToken);
+        return new(generatedToken);
     }
 }
 

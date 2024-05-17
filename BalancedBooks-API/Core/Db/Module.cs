@@ -1,4 +1,4 @@
-using BalancedBooksAPI.Core.Db.Identity;
+using BalancedBooksAPI.Core.Db.Casbin;
 using CommunityToolkit.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,8 +23,10 @@ public static class DbModule
         service.AddOptions<DbConfiguration>().BindConfiguration(DbConfiguration.ConfigKey);
 
         service.AddDbContext<ApplicationDbContext>(options => { options.UseNpgsql(config.ConnectionString); });
-
-        service.AddIdentityApiEndpoints<User>()
-            .AddEntityFrameworkStores<ApplicationDbContext>();
+        
+        service.AddDbContext<AppCasbinDbContext>(builder =>
+        {
+            builder.UseNpgsql(config.ConnectionString);
+        });
     }
 }

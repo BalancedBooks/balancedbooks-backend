@@ -1,4 +1,5 @@
 using BalancedBooksAPI.Authentication.Logout;
+using BalancedBooksAPI.Authentication.SignInWithCredentials;
 using BalancedBooksAPI.Authentication.SignInWithGoogle;
 using BalancedBooksAPI.Authentication.SignUpWithCredentials;
 using BalancedBooksAPI.Core.Exceptions.Models;
@@ -16,18 +17,25 @@ public static class AuthenticationModule
             .WithTags("Authentication");
 
         routeBase
-            .MapPost("/sign-out", async (IMediator mediator) => await mediator.Send(new LogoutCommand()))
-            .WithName(nameof(LogoutCommand))
-            .Produces<LogoutCommandResponse>()
+            .MapPost("/sign-out", async (IMediator mediator) => await mediator.Send(new SignOutCommand()))
+            .WithName(nameof(SignOutCommand))
+            .Produces<SignOutCommandResponse>()
             .WithOpenApi();
 
         routeBase
+            .MapPost("/sign-in/credentials",
+                async (IMediator mediator, SignInWithCredentialsCommand command) => await mediator.Send(command))
+            .WithName(nameof(SignInWithCredentialsCommand))
+            .Produces<SignInWithCredentialsCommandResponse>()
+            .WithOpenApi();
+
+        /*routeBase
             .MapPost("/sign-in/google",
                 async (IMediator mediator, SignInWithGoogleCommand command) => await mediator.Send(command))
             .WithName(nameof(SignInWithGoogleCommand))
             .Produces<IUnauthorizedException>(400)
             .Produces<SignInWithGoogleCommandResponse>()
-            .WithOpenApi();
+            .WithOpenApi();*/
 
         routeBase
             .MapPost("/sign-up/basic",

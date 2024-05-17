@@ -9,6 +9,19 @@ namespace BalancedBooksAPI.Authentication.Core;
 
 public class AuthenticationService(IOptionsMonitor<AuthConfig> config)
 {
+    public (string passwordHash, string salt) HashPassword(string password)
+    {
+        var salt = BCrypt.Net.BCrypt.GenerateSalt();
+        var passwordHash = BCrypt.Net.BCrypt.HashPassword(password, salt);
+
+        return (passwordHash, salt);
+    }
+
+    public bool VerifyPassword(string password, string passwordHash)
+    {
+        return BCrypt.Net.BCrypt.Verify(password, passwordHash);
+    }
+
     public static (RSA publicRsa, RSA privateRsa) GetSecureRsaKeys(string publicKeyAsBase64, string privateKeyAsBase64,
         string privateSignKey)
     {
@@ -36,7 +49,7 @@ public class AuthenticationService(IOptionsMonitor<AuthConfig> config)
             .WithAlgorithm(new RS256Algorithm(publicRsa, privateRsa))
             .MustVerifySignature()
             .AddClaim("exp", expire)
-            .AddClaims(claims.Select((claim) => new KeyValuePair<string, object>(claim.Type, claim.Value)))
+            .AddClaims(claims.Select(claim => new KeyValuePair<string, object>(claim.Type, claim.Value)))
             .Encode();
     }
 }

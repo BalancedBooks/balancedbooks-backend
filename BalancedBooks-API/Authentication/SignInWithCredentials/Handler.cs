@@ -1,18 +1,65 @@
+using System.Security.Claims;
+using BalancedBooksAPI.Authentication.Claims.Core;
+using BalancedBooksAPI.Authentication.Core;
 using BalancedBooksAPI.Core.Db;
+using BalancedBooksAPI.Core.Db.Core;
+using BalancedBooksAPI.Core.Exceptions.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace BalancedBooksAPI.Authentication.SignInWithCredentials;
 
-public record SignInWithCredentialsCommand : IRequest<SignInWithCredentialsCommandResponse>;
+public record SignInWithCredentialsCommand(string Email, string Password)
+    : IRequest<SignInWithCredentialsCommandResponse>;
 
 public class
-    SignInWithCredentialsHandler(ApplicationDbContext dbContext)
+    SignInWithCredentialsHandler(
+        ApplicationDbContext dbContext,
+        AuthenticationService authenticationService,
+        IHttpContextAccessor accessor,
+        IOptionsMonitor<AuthConfig> authConfig)
     : IRequestHandler<SignInWithCredentialsCommand, SignInWithCredentialsCommandResponse>
 {
     public async Task<SignInWithCredentialsCommandResponse> Handle(SignInWithCredentialsCommand request,
         CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var (email, password) = request;
+
+        var user = await dbContext.Users.FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
+
+        if (user is null)
+        {
+            throw new UnauthorizedException("INVALID_CREDENTIALS", "Invalid credentials");
+        }
+
+        var isMatch = authenticationService.VerifyPassword(password, user.PasswordHash);
+
+        if (!isMatch)
+        {
+            throw new UnauthorizedException("INVALID_CREDENTIALS", "Invalid credentials");
+        }
+
+        var claims = new List<Claim>
+        {
+            new(BalancedBooksCoreClaims.Id, user.Id.ToString()),
+        };
+
+        var generatedToken = authenticationService.GenerateAccessToken(claims);
+
+        var accessToken = new UserSession
+        {
+            AccessToken = generatedToken,
+            UserId = user.Id,
+        };
+
+        await dbContext.UserSessions.AddAsync(accessToken, cancellationToken);
+        await dbContext.SaveChangesAsync(cancellationToken);
+
+        accessor.HttpContext?.Response.Cookies.SetAccessTokenCookie(generatedToken, authConfig.CurrentValue.CookieName,
+            authConfig.CurrentValue.Domain);
+
+        return new();
     }
 }
 

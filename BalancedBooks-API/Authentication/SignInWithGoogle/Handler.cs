@@ -1,9 +1,7 @@
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using BalancedBooksAPI.Authentication.Claims.Core;
-using BalancedBooksAPI.Authentication.Claims.Google;
 using BalancedBooksAPI.Authentication.Core;
-using BalancedBooksAPI.Core.Db.Identity;
 using BalancedBooksAPI.Core.Exceptions.Models;
 using FluentValidation;
 using Flurl;
@@ -14,6 +12,7 @@ using Microsoft.Extensions.Options;
 
 namespace BalancedBooksAPI.Authentication.SignInWithGoogle;
 
+/*
 public record SignInWithGoogleCommand(string AccessToken) : IRequest<SignInWithGoogleCommandResponse>;
 
 public class CommandValidator : AbstractValidator<SignInWithGoogleCommand>
@@ -26,7 +25,6 @@ public class CommandValidator : AbstractValidator<SignInWithGoogleCommand>
 
 public class SignInWithGoogleHandler(
     ILogger<SignInWithGoogleHandler> logger,
-    UserManager<User> userManager,
     HttpClient httpClient,
     IOptionsMonitor<AuthConfig> authConfig,
     AuthenticationService authenticationService,
@@ -111,4 +109,4 @@ public class SignInWithGoogleHandler(
     }
 }
 
-public record SignInWithGoogleCommandResponse(string AccessToken);
+public record SignInWithGoogleCommandResponse(string AccessToken);*/

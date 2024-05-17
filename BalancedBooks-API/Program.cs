@@ -3,12 +3,14 @@ using BalancedBooksAPI.Account;
 using BalancedBooksAPI.Authentication;
 using BalancedBooksAPI.Authentication.Core;
 using BalancedBooksAPI.Core.Db;
+using BalancedBooksAPI.Core.Db.Casbin;
 using BalancedBooksAPI.Core.Environment;
 using BalancedBooksAPI.Core.Exceptions;
 using BalancedBooksAPI.Core.Mediatr;
 using BalancedBooksAPI.Core.OpenAPI;
 using BalancedBooksAPI.OpenApi;
 using BalancedBooksAPI.PublicCompanyCertificate;
+using Casbin.Persist.Adapter.EFCore;
 using CommunityToolkit.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -71,7 +73,6 @@ app.MapOpenApiModuleRoutes();
 
 app.Use(async (context, next) =>
 {
-    
     await next(context);
 });
 
@@ -80,13 +81,14 @@ app.UseCors("CorsFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseExceptionMiddlewareModule();
-app.UseHttpsRedirection();
 
 /* RUN */
-var dbContext = app.Services.GetRequiredService<ApplicationDbContext>();
+var appDbContext = app.Services.GetRequiredService<ApplicationDbContext>();
+var casbinDbContext = app.Services.GetRequiredService<AppCasbinDbContext>();
 
-await dbContext.Database.EnsureDeletedAsync();
-await dbContext.Database.EnsureCreatedAsync();
+await appDbContext.Database.EnsureDeletedAsync();
+await appDbContext.Database.EnsureCreatedAsync();
+await casbinDbContext.Database.EnsureCreatedAsync();
 
 
 app.Run();
