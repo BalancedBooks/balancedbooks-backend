@@ -3,19 +3,14 @@ using Newtonsoft.Json;
 
 namespace BalancedBooksAPI.Core.Exceptions.Models;
 
-public class GatewayTimeoutException: HttpBaseException
+public class GatewayTimeoutException(string errorCode, string errorMessage) : HttpBaseException
 {
     public override HttpStatusCode HttpStatusCode { get; } = HttpStatusCode.GatewayTimeout;
     public override string Message { get; } = "Gateway Timeout";
     
     [JsonProperty("errorCode")]
-    public string ErrorCode { get; }
-    [JsonProperty("errorMessage")]
-    public string ErrorMessage { get; }
+    public string ErrorCode { get; } = errorCode;
 
-    public GatewayTimeoutException(string errorCode, string errorMessage)
-    {
-        ErrorCode = errorCode;
-        ErrorMessage = errorMessage;
-    }
+    [JsonProperty("errorMessage")]
+    public string ErrorMessage { get; } = errorMessage;
 }

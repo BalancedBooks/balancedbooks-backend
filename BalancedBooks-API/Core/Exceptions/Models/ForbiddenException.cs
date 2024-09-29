@@ -3,19 +3,14 @@ using Newtonsoft.Json;
 
 namespace BalancedBooksAPI.Core.Exceptions.Models;
 
-public class ForbiddenException: HttpBaseException
+public class ForbiddenException(string errorCode, string errorMessage) : HttpBaseException
 {
     public override HttpStatusCode HttpStatusCode { get; } = HttpStatusCode.Forbidden;
     public override string Message { get; } = "Forbidden";
     
     [JsonProperty("errorCode")]
-    public string ErrorCode { get; }
-    [JsonProperty("errorMessage")]
-    public string ErrorMessage { get; }
+    public string ErrorCode { get; } = errorCode;
 
-    public ForbiddenException(string errorCode, string errorMessage)
-    {
-        ErrorCode = errorCode;
-        ErrorMessage = errorMessage;
-    }
+    [JsonProperty("errorMessage")]
+    public string ErrorMessage { get; } = errorMessage;
 }
