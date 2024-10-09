@@ -40,7 +40,7 @@ public class AuthenticationService(IOptionsMonitor<AuthConfig> config)
         int? expireInDays = 14)
     {
         var tokenExpireDays = config.CurrentValue.AccessTokenExpireDays;
-        var expire = DateTimeOffset.UtcNow.AddHours(expireInDays ?? int.Parse(tokenExpireDays)).ToUnixTimeSeconds();
+        var expire = DateTimeOffset.UtcNow.AddDays(expireInDays ?? int.Parse(tokenExpireDays)).ToUnixTimeSeconds();
 
         var (publicRsa, privateRsa) = GetSecureRsaKeys(config.CurrentValue.PublicKeyBase64,
             config.CurrentValue.PrivateKeyBase64, config.CurrentValue.PrivateSignKey);
@@ -48,7 +48,7 @@ public class AuthenticationService(IOptionsMonitor<AuthConfig> config)
         return JwtBuilder.Create()
             .WithAlgorithm(new RS256Algorithm(publicRsa, privateRsa))
             .MustVerifySignature()
-            .AddClaim("exp", expire)
+            .ExpirationTime(expire)
             .AddClaims(claims.Select(claim => new KeyValuePair<string, object>(claim.Type, claim.Value)))
             .Encode();
     }

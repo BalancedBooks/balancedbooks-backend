@@ -58,6 +58,7 @@ public static class AuthConfigExtensions
                 var tokenValidationParameters = new TokenValidationParameters
                 {
                     // Token signature will be verified using a private key.
+                    
                     ValidateIssuerSigningKey = false,
                     RequireSignedTokens = false,
                     ValidateIssuer = false,
@@ -69,7 +70,6 @@ public static class AuthConfigExtensions
                     ValidateLifetime = true,
                     RequireExpirationTime = true,
                     ClockSkew = new TimeSpan(0, 5, 0),
-
                     ValidateActor = false,
                 };
 
@@ -82,6 +82,7 @@ public static class AuthConfigExtensions
                         return Task.CompletedTask;
                     }
                 };
+                
 
             });
         

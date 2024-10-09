@@ -27,6 +27,7 @@ public static class AuthenticationModule
                 async (IMediator mediator, SignInWithCredentialsCommand command) => await mediator.Send(command))
             .WithName(nameof(SignInWithCredentialsCommand))
             .Produces<SignInWithCredentialsCommandResponse>()
+            .Produces<IUnauthorizedException>(401)
             .WithOpenApi();
 
         /*routeBase
@@ -41,6 +42,7 @@ public static class AuthenticationModule
             .MapPost("/sign-up/basic",
                 async (IMediator mediator, SignUpWithCredentialsCommand command) => await mediator.Send(command))
             .WithName(nameof(SignUpWithCredentialsCommand))
+            .Produces<IConflictException>(409)
             .Produces<IConflictException>(409)
             .Produces<SignUpWithCredentialsResponse>()
             .WithOpenApi();

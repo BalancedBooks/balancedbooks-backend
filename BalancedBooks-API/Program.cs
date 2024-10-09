@@ -1,3 +1,4 @@
+using System.Net;
 using BalancedBooks_Integrations_CompanyRegistry;
 using BalancedBooksAPI.Account;
 using BalancedBooksAPI.Authentication;
@@ -59,6 +60,11 @@ Guard.IsNotNull(companyRegistryConfig);
 services.AddHttpContextAccessor();
 services.AddCompanyRegistryIntegrationModule(companyRegistryConfig);
 
+builder.WebHost.ConfigureKestrel(((context, options) =>
+{
+    options.ListenAnyIP( 5555);
+}));
+
 // init
 var app = builder.Build();
 
@@ -70,11 +76,6 @@ app.MapPublicCompanyCertificateModuleRoutes();
 app.MapOpenApiModuleRoutes();
 
 /* MIDDLEWARES */
-
-app.Use(async (context, next) =>
-{
-    await next(context);
-});
 
 app.UseSwaggerDependencies();
 app.UseCors("CorsFrontend");

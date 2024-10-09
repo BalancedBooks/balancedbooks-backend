@@ -44,16 +44,18 @@ public class Validator : AbstractValidator<SignUpWithCredentialsCommand>
             .WithMessage("Must be maximum 20 char length")
             .WithErrorCode("AUTH_SIGNUP_PASSWORD_MAX_LENGTH");
 
-        RuleFor(x => x.EmailAddress).NotEmpty();
+        RuleFor(x => x.Email).EmailAddress().NotEmpty();
     }
 }
 
 public record SignUpWithCredentialsCommand(
     string FirstName,
     string LastName,
-    string EmailAddress,
+    string Email,
     bool AgreedTerms,
-    string Password)
+    string Password,
+    string ConfirmPassword
+)
     : IRequest<SignUpWithCredentialsResponse>;
 
 public class SignUpWithCredentialsHandler(
@@ -66,7 +68,7 @@ public class SignUpWithCredentialsHandler(
     public async Task<SignUpWithCredentialsResponse> Handle(SignUpWithCredentialsCommand request,
         CancellationToken cancellationToken)
     {
-        var (firstName, lastName, emailAddress, _, password) = request;
+        var (firstName, lastName, emailAddress, _, password, confirmPassword) = request;
 
         var existingUser = await dbContext.Users.FirstOrDefaultAsync(x => x.Email == emailAddress, cancellationToken);
 
@@ -97,7 +99,7 @@ public class SignUpWithCredentialsHandler(
 
         var generatedToken =
             authenticationService.GenerateAccessToken(claims);
-        
+
         var userSession = new UserSession
         {
             AccessToken = generatedToken,
@@ -105,7 +107,7 @@ public class SignUpWithCredentialsHandler(
         };
 
         await dbContext.UserSessions.AddAsync(userSession, cancellationToken);
-        
+
         await dbContext.SaveChangesAsync(cancellationToken);
 
         accessor.HttpContext?.Response.Cookies.SetAccessTokenCookie(generatedToken, authConfig.CurrentValue.CookieName,
