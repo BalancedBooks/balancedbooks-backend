@@ -7,7 +7,6 @@ using BalancedBooksAPI.Core.Mediatr;
 using BalancedBooksAPI.Core.OpenAPI;
 using BalancedBooksAPI.Features.Authentication.Config;
 using BalancedBooksAPI.Features.Authentication.Services;
-using BalancedBooksAPI.PublicCompanyCertificate;
 using Carter;
 using CommunityToolkit.Diagnostics;
 
@@ -46,32 +45,16 @@ services
     .AddAuthenticationConfig(configuration)
     .AddOpenApiDocumentation(configuration)
     .AddMediatrHandlers()
-    .AddExceptionMiddlewareSerializer();
+    .AddExceptionMiddlewareSerializer()
+    .AddHttpContextAccessor();
 
 services.AddDbConfiguration(configuration);
 services.AddSingleton<AuthenticationService>();
 
-/*
- * Company Registry Module
- */
-
-var companyRegistryConfig = configuration
-    .GetSection(CompanyRegistryConfig.ConfigKey)
-    .Get<CompanyRegistryConfig>();
-
-Guard.IsNotNull(companyRegistryConfig);
-
-services.AddHttpContextAccessor();
-services.AddCompanyRegistryIntegrationModule(companyRegistryConfig);
-
+// TODO: should be env based
 builder.WebHost.ConfigureKestrel((_, options) => { options.ListenAnyIP(5555); });
 
-// init
 var app = builder.Build();
-
-/* MODULES */
-
-app.MapPublicCompanyCertificateModuleRoutes();
 
 /* MIDDLEWARES */
 
