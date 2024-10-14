@@ -76,7 +76,6 @@ var app = builder.Build();
 
 /* MODULES */
 
-app.MapAuthenticationModuleRoutes();
 app.MapPublicCompanyCertificateModuleRoutes();
 app.MapOpenApiModuleRoutes();
 
