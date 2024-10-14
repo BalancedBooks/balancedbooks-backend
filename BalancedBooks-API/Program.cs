@@ -5,11 +5,8 @@ using BalancedBooksAPI.Core.Environment;
 using BalancedBooksAPI.Core.Exceptions;
 using BalancedBooksAPI.Core.Mediatr;
 using BalancedBooksAPI.Core.OpenAPI;
-using BalancedBooksAPI.Features.Account;
-using BalancedBooksAPI.Features.Authentication;
 using BalancedBooksAPI.Features.Authentication.Config;
 using BalancedBooksAPI.Features.Authentication.Services;
-using BalancedBooksAPI.OpenApi;
 using BalancedBooksAPI.PublicCompanyCertificate;
 using Carter;
 using CommunityToolkit.Diagnostics;
@@ -20,13 +17,12 @@ var opts = new WebApplicationOptions()
 };
 
 var builder = WebApplication.CreateEmptyBuilder(opts);
+
 var services = builder.Services;
 var configuration = builder.Configuration;
 
 builder.WebHost
     .UseKestrelCore();
-
-/* DEPENDENCIES */
 
 services
     .AddRoutingCore()
@@ -45,7 +41,6 @@ services
                 .AllowAnyHeader();
         });
     })
-    // customs
     .AddCarter()
     .AddEnvironmentFlow(builder, configuration)
     .AddAuthenticationConfig(configuration)
@@ -77,7 +72,6 @@ var app = builder.Build();
 /* MODULES */
 
 app.MapPublicCompanyCertificateModuleRoutes();
-app.MapOpenApiModuleRoutes();
 
 /* MIDDLEWARES */
 
