@@ -1,12 +1,12 @@
-using BalancedBooksAPI.Authentication.Claims.Core;
-using BalancedBooksAPI.Authentication.Core;
 using BalancedBooksAPI.Core.Db;
 using BalancedBooksAPI.Core.Exceptions.Models;
+using BalancedBooksAPI.Features.Authentication.Claims;
+using BalancedBooksAPI.Features.Authentication.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-namespace BalancedBooksAPI.Authentication.Logout;
+namespace BalancedBooksAPI.Features.Authentication.Logout;
 
 public class SignOutCommand : IRequest<SignOutCommandResponse>;
 
@@ -27,7 +27,7 @@ public class SignOutHandler(
 
         var success = accessor.HttpContext?.Request.Cookies[authConfig.CurrentValue.CookieName];
 
-        accessor.HttpContext?.Response.Cookies.DeleteCookie(authConfig.CurrentValue.Domain,
+        accessor.HttpContext?.Response.Cookies.SetAccessTokenCookieExpired(authConfig.CurrentValue.Domain,
             authConfig.CurrentValue.CookieName);
 
         var userSession =

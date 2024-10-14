@@ -1,6 +1,4 @@
 using BalancedBooks_Integrations_CompanyRegistry;
-using BalancedBooksAPI.Authentication;
-using BalancedBooksAPI.Authentication.Core;
 using BalancedBooksAPI.Core.Db;
 using BalancedBooksAPI.Core.Db.Casbin;
 using BalancedBooksAPI.Core.Environment;
@@ -8,6 +6,8 @@ using BalancedBooksAPI.Core.Exceptions;
 using BalancedBooksAPI.Core.Mediatr;
 using BalancedBooksAPI.Core.OpenAPI;
 using BalancedBooksAPI.Features.Account;
+using BalancedBooksAPI.Features.Authentication;
+using BalancedBooksAPI.Features.Authentication.Services;
 using BalancedBooksAPI.OpenApi;
 using BalancedBooksAPI.PublicCompanyCertificate;
 using Carter;

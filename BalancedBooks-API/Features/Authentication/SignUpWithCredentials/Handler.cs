@@ -1,15 +1,16 @@
 using System.Security.Claims;
-using BalancedBooksAPI.Authentication.Claims.Core;
-using BalancedBooksAPI.Authentication.Core;
 using BalancedBooksAPI.Core.Db;
 using BalancedBooksAPI.Core.Db.Models;
 using BalancedBooksAPI.Core.Exceptions.Models;
+using BalancedBooksAPI.Features.Authentication.Claims;
+using BalancedBooksAPI.Features.Authentication.Extensions;
+using BalancedBooksAPI.Features.Authentication.Services;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-namespace BalancedBooksAPI.Authentication.SignUpWithCredentials;
+namespace BalancedBooksAPI.Features.Authentication.SignUpWithCredentials;
 
 public class Validator : AbstractValidator<SignUpWithCredentialsCommand>
 {
@@ -77,7 +78,7 @@ public class SignUpWithCredentialsHandler(
             throw new ConflictException("USER_ALREADY_EXISTS", "User already exists with such email");
         }
 
-        var (passwordHash, salt) = authenticationService.HashPassword(password);
+        var (passwordHash, salt) = AuthenticationService.HashPassword(password);
 
         var user = new User
         {
@@ -110,7 +111,7 @@ public class SignUpWithCredentialsHandler(
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        accessor.HttpContext?.Response.Cookies.SetAccessTokenCookie(generatedToken, authConfig.CurrentValue.CookieName,
+        accessor.HttpContext?.Response.Cookies.AppendAccessTokenCookie(generatedToken, authConfig.CurrentValue.CookieName,
             authConfig.CurrentValue.Domain);
 
         return new(generatedToken);

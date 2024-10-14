@@ -1,16 +1,4 @@
-using System.Net.Http.Headers;
-using System.Security.Claims;
-using BalancedBooksAPI.Authentication.Claims.Core;
-using BalancedBooksAPI.Authentication.Core;
-using BalancedBooksAPI.Core.Exceptions.Models;
-using FluentValidation;
-using Flurl;
-using Google.Apis.PeopleService.v1.Data;
-using MediatR;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
-
-namespace BalancedBooksAPI.Authentication.SignInWithGoogle;
+namespace BalancedBooksAPI.Features.Authentication.SignInWithGoogle;
 
 /*
 public record SignInWithGoogleCommand(string AccessToken) : IRequest<SignInWithGoogleCommandResponse>;

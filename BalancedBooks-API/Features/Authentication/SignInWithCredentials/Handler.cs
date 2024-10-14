@@ -1,14 +1,15 @@
 using System.Security.Claims;
-using BalancedBooksAPI.Authentication.Claims.Core;
-using BalancedBooksAPI.Authentication.Core;
 using BalancedBooksAPI.Core.Db;
 using BalancedBooksAPI.Core.Db.Models;
 using BalancedBooksAPI.Core.Exceptions.Models;
+using BalancedBooksAPI.Features.Authentication.Claims;
+using BalancedBooksAPI.Features.Authentication.Extensions;
+using BalancedBooksAPI.Features.Authentication.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-namespace BalancedBooksAPI.Authentication.SignInWithCredentials;
+namespace BalancedBooksAPI.Features.Authentication.SignInWithCredentials;
 
 public record SignInWithCredentialsCommand(string Email, string Password)
     : IRequest<SignInWithCredentialsCommandResponse>;
@@ -33,7 +34,7 @@ public class
             throw new UnauthorizedException("INVALID_CREDENTIALS", "Invalid credentials");
         }
 
-        var isMatch = authenticationService.VerifyPassword(password, user.PasswordHash);
+        var isMatch = AuthenticationService.VerifyPassword(password, user.PasswordHash);
 
         if (!isMatch)
         {
@@ -56,7 +57,7 @@ public class
         await dbContext.UserSessions.AddAsync(accessToken, cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        accessor.HttpContext?.Response.Cookies.SetAccessTokenCookie(generatedToken, authConfig.CurrentValue.CookieName,
+        accessor.HttpContext?.Response.Cookies.AppendAccessTokenCookie(generatedToken, authConfig.CurrentValue.CookieName,
             authConfig.CurrentValue.Domain);
 
         return new();

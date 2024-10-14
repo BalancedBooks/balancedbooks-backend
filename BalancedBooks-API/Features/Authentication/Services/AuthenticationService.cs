@@ -5,11 +5,11 @@ using JWT.Algorithms;
 using JWT.Builder;
 using Microsoft.Extensions.Options;
 
-namespace BalancedBooksAPI.Authentication.Core;
+namespace BalancedBooksAPI.Features.Authentication.Services;
 
 public class AuthenticationService(IOptionsMonitor<AuthConfig> config)
 {
-    public (string passwordHash, string salt) HashPassword(string password)
+    public static (string passwordHash, string salt) HashPassword(string password)
     {
         var salt = BCrypt.Net.BCrypt.GenerateSalt();
         var passwordHash = BCrypt.Net.BCrypt.HashPassword(password, salt);
@@ -17,7 +17,7 @@ public class AuthenticationService(IOptionsMonitor<AuthConfig> config)
         return (passwordHash, salt);
     }
 
-    public bool VerifyPassword(string password, string passwordHash)
+    public static bool VerifyPassword(string password, string passwordHash)
     {
         return BCrypt.Net.BCrypt.Verify(password, passwordHash);
     }

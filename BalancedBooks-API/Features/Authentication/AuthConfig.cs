@@ -1,14 +1,10 @@
-using System.Security.Cryptography;
-using System.Text;
-using BalancedBooksAPI.Authentication.Core;
+using BalancedBooksAPI.Features.Authentication.Services;
 using CommunityToolkit.Diagnostics;
 using JWT.Algorithms;
-using JWT.Extensions.AspNetCore;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
-namespace BalancedBooksAPI.Authentication;
+namespace BalancedBooksAPI.Features.Authentication;
 
 public class AuthConfig
 {

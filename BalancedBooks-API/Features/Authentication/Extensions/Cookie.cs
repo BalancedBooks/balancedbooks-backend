@@ -1,8 +1,8 @@
-namespace BalancedBooksAPI.Authentication.Core;
+namespace BalancedBooksAPI.Features.Authentication.Extensions;
 
-public static class AuthUtils
+public static class AuthenticationCookieExtensions
 {
-    public static void SetAccessTokenCookie(this IResponseCookies cookies, string accessToken, string cookieName,
+    public static void AppendAccessTokenCookie(this IResponseCookies cookies, string accessToken, string cookieName,
         string domain,
         int expireDays = 14)
     {
@@ -19,7 +19,7 @@ public static class AuthUtils
         cookies.Append(cookieName, accessToken, cookieOptions);
     }
 
-    public static void DeleteCookie(this IResponseCookies cookies, string domain, string cookieName)
+    public static void SetAccessTokenCookieExpired(this IResponseCookies cookies, string domain, string cookieName)
     {
         cookies.Append(cookieName, "", new CookieOptions
         {

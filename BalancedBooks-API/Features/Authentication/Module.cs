@@ -1,11 +1,10 @@
-using BalancedBooksAPI.Authentication.Logout;
-using BalancedBooksAPI.Authentication.SignInWithCredentials;
-using BalancedBooksAPI.Authentication.SignInWithGoogle;
-using BalancedBooksAPI.Authentication.SignUpWithCredentials;
 using BalancedBooksAPI.Core.Exceptions.Models;
+using BalancedBooksAPI.Features.Authentication.Logout;
+using BalancedBooksAPI.Features.Authentication.SignInWithCredentials;
+using BalancedBooksAPI.Features.Authentication.SignUpWithCredentials;
 using MediatR;
 
-namespace BalancedBooksAPI.Authentication;
+namespace BalancedBooksAPI.Features.Authentication;
 
 public static class AuthenticationModule
 {

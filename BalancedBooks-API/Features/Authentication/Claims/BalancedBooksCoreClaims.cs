@@ -1,4 +1,4 @@
-namespace BalancedBooksAPI.Authentication.Claims.Core;
+namespace BalancedBooksAPI.Features.Authentication.Claims;
 
 public class BalancedBooksCoreClaims
 {
