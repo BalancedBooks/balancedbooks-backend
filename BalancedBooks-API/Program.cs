@@ -10,6 +10,7 @@ using BalancedBooksAPI.Core.Mediatr;
 using BalancedBooksAPI.Core.OpenAPI;
 using BalancedBooksAPI.OpenApi;
 using BalancedBooksAPI.PublicCompanyCertificate;
+using Carter;
 using CommunityToolkit.Diagnostics;
 
 var opts = new WebApplicationOptions()
@@ -44,6 +45,7 @@ services
         });
     })
     // customs
+    .AddCarter()
     .AddEnvironmentFlow(builder, configuration)
     .AddAuthenticationConfig(configuration)
     .AddOpenApiDocumentation(configuration)
@@ -80,6 +82,7 @@ app.MapOpenApiModuleRoutes();
 
 /* MIDDLEWARES */
 
+app.MapCarter();
 app.UseSwaggerDependencies();
 app.UseCors("CorsFrontend");
 app.UseAuthentication();

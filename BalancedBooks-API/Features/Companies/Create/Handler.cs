@@ -6,7 +6,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-namespace BalancedBooksAPI.Companies.Create;
+namespace BalancedBooksAPI.Features.Companies.Create;
 
 public record CreateCompanyCommand(string Name, string VatId, string CurrencyCode)
     : IRequest<CreateCompanyCommandResponse>;
