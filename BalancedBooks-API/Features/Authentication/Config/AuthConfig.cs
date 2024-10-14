@@ -4,7 +4,7 @@ using JWT.Algorithms;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
-namespace BalancedBooksAPI.Features.Authentication;
+namespace BalancedBooksAPI.Features.Authentication.Config;
 
 public class AuthConfig
 {
@@ -48,7 +48,6 @@ public static class AuthConfigExtensions
                 opts.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 opts.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            // TODO: cookie is not working
             .AddJwtBearer(opts =>
             { 
                 var tokenValidationParameters = new TokenValidationParameters

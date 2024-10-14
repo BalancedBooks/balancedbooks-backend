@@ -2,6 +2,7 @@ using BalancedBooksAPI.Core.Db;
 using BalancedBooksAPI.Core.Exceptions.Models;
 using BalancedBooksAPI.Features.Authentication;
 using BalancedBooksAPI.Features.Authentication.Claims;
+using BalancedBooksAPI.Features.Authentication.Config;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;

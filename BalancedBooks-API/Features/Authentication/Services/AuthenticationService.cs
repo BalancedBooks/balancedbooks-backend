@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using BalancedBooksAPI.Core.Utils;
+using BalancedBooksAPI.Features.Authentication.Config;
 using JWT.Algorithms;
 using JWT.Builder;
 using Microsoft.Extensions.Options;

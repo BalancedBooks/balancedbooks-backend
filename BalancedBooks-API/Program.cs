@@ -7,6 +7,7 @@ using BalancedBooksAPI.Core.Mediatr;
 using BalancedBooksAPI.Core.OpenAPI;
 using BalancedBooksAPI.Features.Account;
 using BalancedBooksAPI.Features.Authentication;
+using BalancedBooksAPI.Features.Authentication.Config;
 using BalancedBooksAPI.Features.Authentication.Services;
 using BalancedBooksAPI.OpenApi;
 using BalancedBooksAPI.PublicCompanyCertificate;
