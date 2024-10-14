@@ -9,6 +9,7 @@ using BalancedBooksAPI.Features.Authentication.Config;
 using BalancedBooksAPI.Features.Authentication.Services;
 using Carter;
 using CommunityToolkit.Diagnostics;
+using Microsoft.AspNetCore.Routing.Constraints;
 
 var opts = new WebApplicationOptions()
 {
@@ -19,6 +20,9 @@ var builder = WebApplication.CreateEmptyBuilder(opts);
 
 var services = builder.Services;
 var configuration = builder.Configuration;
+
+// swagger uses regex
+services.Configure<RouteOptions>(options => options.SetParameterPolicy<RegexInlineRouteConstraint>("regex"));
 
 builder.WebHost
     .UseKestrelCore();
