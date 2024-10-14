@@ -1,8 +1,9 @@
 using BalancedBooksAPI.Core.Db.Interceptors;
+using BalancedBooksAPI.Core.Db.Models.Company;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BalancedBooksAPI.Core.Db.Core;
+namespace BalancedBooksAPI.Core.Db.Models;
 
 [EntityTypeConfiguration(typeof(UserEntityConfiguration))]
 public class User : IPublicEntity
@@ -18,6 +19,8 @@ public class User : IPublicEntity
 
     /* relations */
     public ICollection<UserSession> AccessTokens { get; } = null!;
+
+    public ICollection<CompanyMemberships> CompanyMemberships { get; } = null!;
 }
 
 public class UserEntityConfiguration : IEntityTypeConfiguration<User>
@@ -43,12 +46,7 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.PasswordSalt).HasMaxLength(120);
         builder.HasIndex(x => x.PasswordSalt).IsUnique();
 
-        /* relations */
-        builder
-            .HasMany<UserSession>(x => x.AccessTokens)
-            .WithOne(x => x.User)
-            .HasForeignKey(x => x.UserId)
-            .IsRequired()
-            .OnDelete(DeleteBehavior.Cascade);
+        builder.HasMany<UserSession>(x => x.AccessTokens).WithOne(x => x.User).HasForeignKey(x => x.UserId);
+        builder.HasMany<CompanyMemberships>(x => x.CompanyMemberships).WithOne(x => x.User).HasForeignKey(x => x.UserId);
     }
 }

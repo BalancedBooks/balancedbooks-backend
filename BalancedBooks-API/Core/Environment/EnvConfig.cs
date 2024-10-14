@@ -27,6 +27,7 @@ internal class RunningEnvValidation : AbstractValidator<string>
 public static class EnvConfig
 {
     public static IServiceCollection AddEnvironmentFlow(this IServiceCollection service,
+        WebApplicationBuilder builder,
         IConfigurationManager configuration)
     {
         configuration
@@ -41,6 +42,8 @@ public static class EnvConfig
 
         Guard.IsNotNull(config);
         validation.ValidateAndThrow(config.Environment);
+
+        builder.Environment.EnvironmentName = config.Environment;
 
         return service;
     }

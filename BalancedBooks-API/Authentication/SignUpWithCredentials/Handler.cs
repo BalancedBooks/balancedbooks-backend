@@ -2,7 +2,7 @@ using System.Security.Claims;
 using BalancedBooksAPI.Authentication.Claims.Core;
 using BalancedBooksAPI.Authentication.Core;
 using BalancedBooksAPI.Core.Db;
-using BalancedBooksAPI.Core.Db.Core;
+using BalancedBooksAPI.Core.Db.Models;
 using BalancedBooksAPI.Core.Exceptions.Models;
 using FluentValidation;
 using MediatR;

@@ -1,4 +1,3 @@
-using System.Net;
 using BalancedBooks_Integrations_CompanyRegistry;
 using BalancedBooksAPI.Account;
 using BalancedBooksAPI.Authentication;
@@ -11,17 +10,24 @@ using BalancedBooksAPI.Core.Mediatr;
 using BalancedBooksAPI.Core.OpenAPI;
 using BalancedBooksAPI.OpenApi;
 using BalancedBooksAPI.PublicCompanyCertificate;
-using Casbin.Persist.Adapter.EFCore;
 using CommunityToolkit.Diagnostics;
 
-var builder = WebApplication.CreateBuilder(args);
+var opts = new WebApplicationOptions()
+{
+    EnvironmentName = "development"
+};
 
+var builder = WebApplication.CreateEmptyBuilder(opts);
 var services = builder.Services;
 var configuration = builder.Configuration;
+
+builder.WebHost
+    .UseKestrelCore();
 
 /* DEPENDENCIES */
 
 services
+    .AddRoutingCore()
     .AddCors(options =>
     {
         options.AddPolicy("CorsFrontend", policyBuilder =>
@@ -38,7 +44,7 @@ services
         });
     })
     // customs
-    .AddEnvironmentFlow(configuration)
+    .AddEnvironmentFlow(builder, configuration)
     .AddAuthenticationConfig(configuration)
     .AddOpenApiDocumentation(configuration)
     .AddMediatrHandlers()
@@ -60,10 +66,7 @@ Guard.IsNotNull(companyRegistryConfig);
 services.AddHttpContextAccessor();
 services.AddCompanyRegistryIntegrationModule(companyRegistryConfig);
 
-builder.WebHost.ConfigureKestrel(((context, options) =>
-{
-    options.ListenAnyIP( 5555);
-}));
+builder.WebHost.ConfigureKestrel((_, options) => { options.ListenAnyIP(5555); });
 
 // init
 var app = builder.Build();
@@ -90,6 +93,5 @@ var casbinDbContext = app.Services.GetRequiredService<AppCasbinDbContext>();
 await appDbContext.Database.EnsureDeletedAsync();
 await appDbContext.Database.EnsureCreatedAsync();
 await casbinDbContext.Database.EnsureCreatedAsync();
-
 
 app.Run();

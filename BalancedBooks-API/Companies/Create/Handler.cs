@@ -1,24 +1,24 @@
-using System.Security.Claims;
 using BalancedBooksAPI.Authentication;
 using BalancedBooksAPI.Authentication.Claims.Core;
-using BalancedBooksAPI.Authentication.Core;
 using BalancedBooksAPI.Core.Db;
 using BalancedBooksAPI.Core.Exceptions.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-namespace BalancedBooksAPI.Account.GetAccount;
+namespace BalancedBooksAPI.Companies.Create;
 
-public record GetAccountQuery : IRequest<GetAccountQueryResponse>;
+public record CreateCompanyCommand(string Name, string VatId, string CurrencyCode)
+    : IRequest<CreateCompanyCommandResponse>;
 
-public class GetAccountQueryHandler(
+public class CreateCompanyCommandHandler(
     ApplicationDbContext dbContext,
     IHttpContextAccessor accessor,
     IOptionsMonitor<AuthConfig> authConfig)
-    : IRequestHandler<GetAccountQuery, GetAccountQueryResponse>
+    : IRequestHandler<CreateCompanyCommand, CreateCompanyCommandResponse>
 {
-    public async Task<GetAccountQueryResponse> Handle(GetAccountQuery request, CancellationToken cancellationToken)
+    public async Task<CreateCompanyCommandResponse> Handle(CreateCompanyCommand request,
+        CancellationToken cancellationToken)
     {
         var currentUser = accessor.HttpContext?.User;
 
@@ -36,9 +36,11 @@ public class GetAccountQueryHandler(
         {
             throw new UnauthorizedException("USER_NOT_FOUND", "");
         }
+        
+        
 
-        return new GetAccountQueryResponse(user.Email, user.FirstName, user.LastName);
+        return new CreateCompanyCommandResponse(user.Email, user.FirstName, user.LastName);
     }
 }
 
-public record GetAccountQueryResponse(string Email, string FirstName, string LastName);
+public record CreateCompanyCommandResponse(string Email, string FirstName, string LastName);

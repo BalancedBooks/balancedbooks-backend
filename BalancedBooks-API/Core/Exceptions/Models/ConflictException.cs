@@ -14,7 +14,7 @@ public interface IConflictException : IHttpBaseException
     string? TraceIdentifier { get; set; }
 }
 
-public class ConflictException(string errorCode, string errorMessage) : HttpBaseException
+public class ConflictException(string errorCode, string errorMessage) : HttpBaseException, IConflictException
 {
     public override HttpStatusCode HttpStatusCode { get; } = HttpStatusCode.Conflict;
     public override string Message { get; } = "Not Found";

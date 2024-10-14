@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BalancedBooksAPI.Core.Db.Core;
+namespace BalancedBooksAPI.Core.Db.Models;
 
 [EntityTypeConfiguration(typeof(UserSessionEntityConfiguration))]
 public class UserSession

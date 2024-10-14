@@ -3,6 +3,20 @@ using Newtonsoft.Json;
 
 namespace BalancedBooksAPI.Core.Exceptions.Models;
 
+public interface IBadRequestException : IHttpBaseException
+{
+    string ErrorCode { get; }
+    string ErrorMessage { get; }
+
+    /// <summary>
+    /// For debug purpose. Log Trace Id
+    /// </summary>
+    string? TraceIdentifier { get; set; }
+    
+    public List<ValidationError> ValidationErrors { get; set; }
+}
+
+
 public record ValidationError(string? FieldName, string Code, string Message)
 {
     /// <summary>
