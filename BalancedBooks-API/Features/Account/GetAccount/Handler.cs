@@ -1,14 +1,12 @@
-using System.Security.Claims;
 using BalancedBooksAPI.Authentication;
 using BalancedBooksAPI.Authentication.Claims.Core;
-using BalancedBooksAPI.Authentication.Core;
 using BalancedBooksAPI.Core.Db;
 using BalancedBooksAPI.Core.Exceptions.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-namespace BalancedBooksAPI.Account.GetAccount;
+namespace BalancedBooksAPI.Features.Account.GetAccount;
 
 public record GetAccountQuery : IRequest<GetAccountQueryResponse>;
 

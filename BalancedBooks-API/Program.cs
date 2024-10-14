@@ -1,5 +1,4 @@
 using BalancedBooks_Integrations_CompanyRegistry;
-using BalancedBooksAPI.Account;
 using BalancedBooksAPI.Authentication;
 using BalancedBooksAPI.Authentication.Core;
 using BalancedBooksAPI.Core.Db;
@@ -8,6 +7,7 @@ using BalancedBooksAPI.Core.Environment;
 using BalancedBooksAPI.Core.Exceptions;
 using BalancedBooksAPI.Core.Mediatr;
 using BalancedBooksAPI.Core.OpenAPI;
+using BalancedBooksAPI.Features.Account;
 using BalancedBooksAPI.OpenApi;
 using BalancedBooksAPI.PublicCompanyCertificate;
 using Carter;
@@ -76,7 +76,6 @@ var app = builder.Build();
 /* MODULES */
 
 app.MapAuthenticationModuleRoutes();
-app.MapAccountModuleRoutes();
 app.MapPublicCompanyCertificateModuleRoutes();
 app.MapOpenApiModuleRoutes();
 
