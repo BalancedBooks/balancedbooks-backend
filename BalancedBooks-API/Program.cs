@@ -1,6 +1,4 @@
-using BalancedBooks_Integrations_CompanyRegistry;
 using BalancedBooksAPI.Core.Db;
-using BalancedBooksAPI.Core.Db.Casbin;
 using BalancedBooksAPI.Core.Environment;
 using BalancedBooksAPI.Core.Exceptions;
 using BalancedBooksAPI.Core.Mediatr;
@@ -47,7 +45,7 @@ services
     .AddCarter()
     .AddEnvironmentFlow(builder, configuration)
     .AddAuthenticationConfig(configuration)
-    .AddOpenApiDocumentation(configuration)
+    /*.AddOpenApiDocumentation(configuration)*/
     .AddMediatrHandlers()
     .AddExceptionMiddlewareSerializer()
     .AddHttpContextAccessor();
@@ -71,10 +69,8 @@ app.UseExceptionMiddlewareModule();
 
 /* RUN */
 var appDbContext = app.Services.GetRequiredService<ApplicationDbContext>();
-var casbinDbContext = app.Services.GetRequiredService<AppCasbinDbContext>();
 
 await appDbContext.Database.EnsureDeletedAsync();
 await appDbContext.Database.EnsureCreatedAsync();
-await casbinDbContext.Database.EnsureCreatedAsync();
 
 app.Run();
