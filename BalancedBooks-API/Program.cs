@@ -17,15 +17,16 @@ var builder = WebApplication.CreateEmptyBuilder(new()
 var services = builder.Services;
 var configuration = builder.Configuration;
 
-// swagger uses regex
-services.Configure<RouteOptions>(options => options.SetParameterPolicy<RegexInlineRouteConstraint>("regex"));
-
 builder.WebHost
     .UseKestrelCore();
 
 services
     .AddRoutingCore()
-    .AddOpenApi("v1", opts => { opts.AddDocumentTransformer<BearerSecuritySchemaTransformer>(); })
+    .AddOpenApi("v1", opts =>
+    {
+        
+        opts.AddDocumentTransformer<BearerSecuritySchemaTransformer>();
+    })
     .AddCors(options =>
     {
         options.AddPolicy("CorsFrontend", policyBuilder =>
