@@ -7,7 +7,8 @@ using BalancedBooksAPI.Features.Authentication.Config;
 using BalancedBooksAPI.Features.Authentication.Services;
 using Carter;
 using CommunityToolkit.Diagnostics;
-using Microsoft.AspNetCore.Routing.Constraints;
+using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateEmptyBuilder(new()
 {
@@ -22,9 +23,22 @@ builder.WebHost
 
 services
     .AddRoutingCore()
+    .AddEnvironmentFlow(builder, configuration)
     .AddOpenApi("v1", opts =>
     {
+        // TODO: from typed config
+        var url = Environment.GetEnvironmentVariable("HTTP__URL");
         
+        opts.AddDocumentTransformer((document, _, _) =>
+        {
+            document.Servers = new List<OpenApiServer>
+            {
+
+                new() { Url = url }
+            };
+
+            return Task.CompletedTask;
+        });
         opts.AddDocumentTransformer<BearerSecuritySchemaTransformer>();
     })
     .AddCors(options =>
@@ -43,7 +57,6 @@ services
         });
     })
     .AddCarter()
-    .AddEnvironmentFlow(builder, configuration)
     .AddAuthenticationConfig(configuration)
     .AddMediatrHandlers()
     .AddExceptionMiddlewareSerializer()
