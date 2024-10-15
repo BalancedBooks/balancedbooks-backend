@@ -15,7 +15,7 @@ public class OpenApiModule : CarterModule
     {
         app.MapGet("/", (IOptions<HttpConfig> options) =>
         {
-            var schemaUrl = $"{options.Value.Url}/swagger/v1/swagger.json";
+            var schemaUrl = $"{options.Value.Url}/openapi/v1.json";
 
             return Results.Content($"""
                                       <html>

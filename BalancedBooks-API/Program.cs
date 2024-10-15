@@ -2,19 +2,17 @@ using BalancedBooksAPI.Core.Db;
 using BalancedBooksAPI.Core.Environment;
 using BalancedBooksAPI.Core.Exceptions;
 using BalancedBooksAPI.Core.Mediatr;
-using BalancedBooksAPI.Core.OpenAPI;
+using BalancedBooksAPI.Core.OpenApi.DocumentTransformers;
 using BalancedBooksAPI.Features.Authentication.Config;
 using BalancedBooksAPI.Features.Authentication.Services;
 using Carter;
 using CommunityToolkit.Diagnostics;
 using Microsoft.AspNetCore.Routing.Constraints;
 
-var opts = new WebApplicationOptions()
+var builder = WebApplication.CreateEmptyBuilder(new()
 {
     EnvironmentName = "development"
-};
-
-var builder = WebApplication.CreateEmptyBuilder(opts);
+});
 
 var services = builder.Services;
 var configuration = builder.Configuration;
@@ -27,6 +25,7 @@ builder.WebHost
 
 services
     .AddRoutingCore()
+    .AddOpenApi("v1", opts => { opts.AddDocumentTransformer<BearerSecuritySchemaTransformer>(); })
     .AddCors(options =>
     {
         options.AddPolicy("CorsFrontend", policyBuilder =>
@@ -45,7 +44,6 @@ services
     .AddCarter()
     .AddEnvironmentFlow(builder, configuration)
     .AddAuthenticationConfig(configuration)
-    /*.AddOpenApiDocumentation(configuration)*/
     .AddMediatrHandlers()
     .AddExceptionMiddlewareSerializer()
     .AddHttpContextAccessor();
@@ -60,8 +58,8 @@ var app = builder.Build();
 
 /* MIDDLEWARES */
 
+app.MapOpenApi();
 app.MapCarter();
-app.UseSwaggerDependencies();
 app.UseCors("CorsFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
