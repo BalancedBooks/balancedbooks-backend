@@ -14,6 +14,7 @@ public class AuthenticationModule : CarterModule
         WithGroupName("v1");
         WithTags("Authentication");
         IncludeInOpenApi();
+        RequireAuthorization();
     }
 
     public override void AddRoutes(IEndpointRouteBuilder app)
@@ -21,7 +22,8 @@ public class AuthenticationModule : CarterModule
         app
             .MapPost("/sign-out", async (IMediator mediator) => await mediator.Send(new SignOutCommand()))
             .WithName(nameof(SignOutCommand))
-            .Produces<SignOutCommandResponse>();
+            .Produces<SignOutCommandResponse>()
+            .Produces<IUnauthorizedException>(401);
 
         app
             .MapPost("/sign-in/credentials",
@@ -44,7 +46,7 @@ public class AuthenticationModule : CarterModule
                 async (IMediator mediator, SignUpWithCredentialsCommand command) => await mediator.Send(command))
             .WithName(nameof(SignUpWithCredentialsCommand))
             .Produces<IConflictException>(409)
-            .Produces<IConflictException>(409)
-            .Produces<SignUpWithCredentialsResponse>();
+            .Produces<SignUpWithCredentialsResponse>()
+            .AllowAnonymous();
     }
 }
