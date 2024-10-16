@@ -21,7 +21,7 @@ public class AccountModule : CarterModule
             .MapGet("/", async (IMediator mediator) => await mediator.Send(new GetAccountQuery()))
             .WithName(nameof(GetAccountQuery))
             .Produces<INotFoundException>(404)
-            .Produces<IUnauthorizedException>(400)
+            .Produces<IUnauthorizedException>(401)
             .Produces<GetAccountQueryResponse>();
         
     }

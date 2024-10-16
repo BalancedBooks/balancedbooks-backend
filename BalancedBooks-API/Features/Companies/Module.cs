@@ -19,7 +19,7 @@ public class CompanyModule: CarterModule
         app
             .MapPost("/", async (IMediator mediator, CreateCompanyCommand cmd) => await mediator.Send(cmd))
             .WithName(nameof(CreateCompanyCommand))
-            .Produces<IUnauthorizedException>(400)
+            .Produces<IUnauthorizedException>(401)
             .Produces<CreateCompanyCommandResponse>()
             .RequireAuthorization();
     }
